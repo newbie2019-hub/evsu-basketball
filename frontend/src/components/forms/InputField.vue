@@ -7,7 +7,7 @@
       :value="$attrs.modelValue"
       @input="emit('update:modelValue', $event.target.value)"
       placeholder=" "
-      class="block text-sm placeholder-transparent w-full peer p-3 border-2 border-gray-300 rounded-md mt-3 focus:outline-none focus:border-blue-600"
+      class="block text-sm placeholder-transparent w-full peer p-3 border-2 border-gray-400 rounded-md mt-3 focus:outline-none focus:border-blue-600"
       :class="{'pl-10' : icon }"
     />
     <label

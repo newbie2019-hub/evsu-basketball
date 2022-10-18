@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests\auth;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Password;
 
-class RegisterRequest extends FormRequest
+class AthleteRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,9 +25,13 @@ class RegisterRequest extends FormRequest
     {
         return [
             'email' => ['required', 'email', 'unique:users,email'],
-            'password' => ['required', Password::min(8)],
+            'password' => ['sometimes'],
             'first_name' => ['required', 'max:120'],
+            'middle_name' => ['max:100'],
             'last_name' => ['required', 'max:120'],
+            'position' => ['required', 'max:50'],
+            'address' => ['required'],
+            'contact' => ['required'],
         ];
     }
 }
