@@ -94,8 +94,8 @@
               class="relative py-4 pl-3 pr-4 text-sm whitespace-nowrap sm:pr-6"
             >
               <div class="flex gap-x-1">
-                <custom-button @click="" color="success" label="Update" />
-                <custom-button @click.prevent="" color="error" label="Delete" />
+                <custom-button size="sm" color="success" label="Update" />
+                <custom-button size="sm" @click="toggleDeleteModal(); userID = athlete.id"  color="error" label="Delete" />
               </div>
             </td>
           </tr>
@@ -111,6 +111,35 @@
         </tbody>
       </table>
     </div>
+
+    <c-modal v-if="isDeleteModalShown" @close="toggleDeleteModal">
+      <template v-slot:title>
+        <p class="text-xl font-bold">Confirm Delete</p>
+        <p class="mt-1 text-sm text-gray-500">
+          Are you sure you want to delete this user?
+        </p>
+      </template>
+      <template v-slot:footer>
+        <div class="flex gap-x-2">
+          <custom-button
+            @click.prevent="toggleDeleteModal"
+            text
+            size="sm"
+            color="error"
+            label="Close"
+          />
+
+          <custom-button
+            @click.prevent="deleteUser"
+            text
+            size="sm"
+            color="success"
+            :loading="isBtnLoading"
+            label="Delete Account"
+          />
+        </div>
+      </template>
+    </c-modal>
 
     <c-modal v-if="isCreateModalShown" @close="toggleCreateModal">
       <template v-slot:title>
@@ -195,15 +224,20 @@ import CModal from "../components/CModal.vue";
 import { useToast } from "vue-toastification";
 
 const userData = ref({ position: "", first_name: "", last_name: "" });
+const userID = ref(null);
 
 const athleteStore = useAthleteStore();
 const isCreateModalShown = ref(false);
+const isDeleteModalShown = ref(false);
 const isBtnLoading = ref(false);
 const toast = useToast();
-const form = ref('')
+const form = ref("");
 
 const toggleCreateModal = () =>
   (isCreateModalShown.value = !isCreateModalShown.value);
+
+const toggleDeleteModal = () =>
+  (isDeleteModalShown.value = !isDeleteModalShown.value);
 
 onBeforeMount(async () => {
   const { status, data } = await athleteStore.get();
@@ -227,5 +261,15 @@ const saveAccount = async () => {
     await getData();
   }
   toggleCreateModal();
+};
+
+const deleteUser = async () => {
+  const { data, status } = await athleteStore.deleteAthlete(userID.value);
+  if (status === 200) {
+    toast.success(data.msg)
+    await getData();
+  }
+
+  toggleDeleteModal();
 };
 </script>

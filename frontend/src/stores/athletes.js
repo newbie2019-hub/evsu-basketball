@@ -10,7 +10,7 @@ export const useAthleteStore = defineStore("athleteStore", () => {
   }
 
   function deleteAthlete(data) {
-    return api.delete("athletes", data);
+    return api.delete(`athletes/${data}`);
   }
 
   function update(data) {

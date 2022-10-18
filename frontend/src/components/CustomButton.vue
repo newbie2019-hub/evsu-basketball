@@ -1,7 +1,7 @@
 <template>
   <button
     :disabled="loading"
-    class="px-2.5 py-2 rounded-md duration-100 ease-in-out focus:ring-2 focus:ring-offset-2 h-100"
+    class="px-3 py-2 rounded-md duration-100 ease-in-out focus:ring-2 focus:ring-offset-2 h-100"
     :class="[
       { 'w-full block': block },
       `bg-${color}-600 hover:bg-${color}-700 focus:ring-${color}-700 disabled:bg-${color}-200`,
