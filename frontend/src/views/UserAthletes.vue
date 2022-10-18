@@ -254,22 +254,26 @@ const getData = async () => {
 };
 
 const saveAccount = async () => {
+  isBtnLoading.value = true
   const { data, status } = await athleteStore.create(userData.value);
   toast.success(data.msg);
   if (status === 200) {
     form.value.reset();
     await getData();
   }
+  isBtnLoading.value = false
   toggleCreateModal();
 };
 
 const deleteUser = async () => {
+  isBtnLoading.value = true
   const { data, status } = await athleteStore.deleteAthlete(userID.value);
   if (status === 200) {
     toast.success(data.msg)
     await getData();
   }
-
+  
+  isBtnLoading.value = false
   toggleDeleteModal();
 };
 </script>
