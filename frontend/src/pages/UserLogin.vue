@@ -53,7 +53,7 @@ import InputField from "../components/forms/InputField.vue";
 import CustomButton from "../components/CustomButton.vue";
 import Cookies from "js-cookie";
 import CustomCheckbox from "../components/forms/CustomCheckbox.vue";
-import { useRouter } from 'vue-router'
+import { useRouter } from "vue-router";
 import { useAuthStore } from "../stores/authentication";
 import { useToast } from "vue-toastification";
 import { ref } from "vue";
@@ -72,10 +72,10 @@ const loginAccount = async () => {
     Cookies.set("access_token", data.data.access_token);
     localStorage.setItem("user_data", JSON.stringify(data.data.user));
 
-    user.value = data.data.user
+    user.value = data.data.user;
 
     toast.success(data.msg);
-    router.push('/')
+    router.push("/");
   }
   isLoading.value = false;
 };
