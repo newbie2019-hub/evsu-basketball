@@ -2,10 +2,13 @@
   <router-view />
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
+import { useQuasar } from 'quasar';
+const $q = useQuasar()
 
-export default defineComponent({
-  name: 'App'
+$q.loading.show({
+  delay: 400 // ms
 })
+
+$q.loading.hide()
 </script>

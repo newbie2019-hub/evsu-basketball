@@ -24,7 +24,7 @@ const routes = [
       },
       {
         path: "schedules",
-        name: "Schedule",
+        name: "Schedules",
         component: () => import("../views/GameSchedule.vue"),
       },
       {

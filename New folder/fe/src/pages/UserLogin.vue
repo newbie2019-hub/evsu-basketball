@@ -40,6 +40,7 @@
                 type="submit"
                 color="primary"
                 class="block full-width"
+                :loading="isLoading"
               />
             </div>
           </q-form>

@@ -11,12 +11,17 @@ class AthletesController extends Controller
 {
     use ApiResponse;
 
-    public function index()
+    public function index(Request $request)
     {
-        $athletes = User::where('user_type', '<>', 'admin')->paginate(10);
+        $athletes = User::where('user_type', '<>', 'admin')
+        ->when($request->search, fn ($query, $search)
+            => $query->where('first_name', 'like', '%' . $search . '%')
+            ->orWhere('last_name', 'like', '%'. $search .'%')
+            ->orWhere('email', 'like', '%'. $search .'%'))
+        ->paginate($request->per_page);
+
         return $this->data($athletes);
     }
-
 
     public function store(AthleteRequest $request)
     {
@@ -24,9 +29,10 @@ class AthletesController extends Controller
         return $this->success('Account created successfully!');
     }
 
-    public function update(Request $request, $id)
+    public function update(AthleteRequest $request, User $user)
     {
-        //
+        $user->update($request->validated());
+        return $this->success('User data updated successfully!');
     }
 
     public function destroy($id)

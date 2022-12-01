@@ -29,6 +29,7 @@ class User extends Authenticatable
         'program',
         'section',
         'address',
+        'gender',
         'position',
         'contact',
         'email',
@@ -38,7 +39,7 @@ class User extends Authenticatable
 
     protected function serializeDate(DateTimeInterface $date)
     {
-        return $date->format('Y-m-d h:i A');
+        return $date->format('F j, Y h:i A');
     }
 
     /**

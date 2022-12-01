@@ -4,6 +4,9 @@ use App\Http\Controllers\AthletesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GameDrillController;
+use App\Http\Controllers\GameScheduleController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -31,4 +34,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     });
 
     Route::apiResource('athletes', AthletesController::class);
+    Route::apiResource('gameschedule', GameScheduleController::class);
+    Route::apiResource('drills', GameDrillController::class);
 });

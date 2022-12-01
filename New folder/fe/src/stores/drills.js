@@ -2,8 +2,8 @@ import { defineStore } from "pinia";
 import api from "../boot/axios";
 import { ref, computed } from "vue";
 
-export const useAthleteStore = defineStore("athleteStore", () => {
-  let athletes = ref([]);
+export const useDrillsStore = defineStore("drillStore", () => {
+  let drills = ref([]);
 
   function get(page) {
     const prop = typeof page === 'object'
@@ -11,21 +11,21 @@ export const useAthleteStore = defineStore("athleteStore", () => {
     const search = prop ? page.pagination.search : ''
     const perPage = prop ? page.pagination.rowsPerPage : 10
 
-    return api.get(`athletes?page=${p}&search=${search}&per_page=${perPage}`);
+    return api.get(`drills?page=${p}&search=${search}&per_page=${perPage}`);
   }
 
-  function deleteAthlete(data) {
-    return api.delete(`athletes/${data}`);
+  function deleteDrill(data) {
+    return api.delete(`drills/${data}`);
   }
 
   function update(data) {
     console.log('Passed Data: ', data)
-    return api.put(`athletes/${data.id}`, data);
+    return api.put(`drills/${data.id}`, data);
   }
 
   function create(data) {
-    return api.post("athletes", data);
+    return api.post("drills", data);
   }
 
-  return { athletes, get, deleteAthlete, update, create };
+  return { drills, get, deleteDrill, update, create };
 });

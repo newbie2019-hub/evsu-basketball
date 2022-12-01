@@ -22,6 +22,7 @@ class DefaultAccountSeeder extends Seeder
             'address' => 'Brgy. 109-A Solar Alley, Phase 2B V&G Tacloban City, Leyte',
             'position' => 'Coach',
             'user_type' => 'admin',
+            'gender' => 'Male',
             'email' => 'avillanueva@gmail.com',
             'password' => '123123'
         ]);
