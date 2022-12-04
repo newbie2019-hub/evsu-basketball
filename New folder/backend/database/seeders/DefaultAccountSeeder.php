@@ -24,7 +24,9 @@ class DefaultAccountSeeder extends Seeder
             'user_type' => 'admin',
             'gender' => 'Male',
             'email' => 'avillanueva@gmail.com',
-            'password' => '123123'
+            'password' => '123123',
+            'height' => 175,
+            'weight' => 60
         ]);
     }
 }

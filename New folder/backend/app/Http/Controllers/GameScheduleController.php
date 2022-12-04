@@ -33,9 +33,9 @@ class GameScheduleController extends Controller
         return $this->success('Game schedule has been updated successfully!');
     }
 
-    public function destroy($id)
+    public function destroy(GameSchedule $schedule)
     {
-        GameSchedule::destroy($id);
+        $schedule->delete();
         return $this->success('Game schedule has been removed successfully!');
     }
 }

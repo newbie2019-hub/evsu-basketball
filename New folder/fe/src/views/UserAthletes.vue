@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="q-my-md">
     <q-table
       flat
       class="my-sticky-column-table"
@@ -362,7 +362,7 @@ const columns = [
     name: "contact",
     label: "Contact Number",
     align: "left",
-    field: (row) => row.contact,
+    field: (row) => row.contact ?? 'No Data',
     sortable: false,
   },
   {
@@ -445,8 +445,11 @@ onBeforeMount(async () => {
 
 const getData = async (props) => {
   loading.value = true;
+  console.log('Props Data: ', props)
 
   const initialPage = props ?? 1;
+  pagination.value.sortBy = props?.pagination?.sortBy
+  pagination.value.descending = props?.pagination?.descending
   pagination.value.rowsPerPage = props?.pagination?.rowsPerPage ?? 10;
 
   const { status, data } = await athleteStore.get(initialPage);

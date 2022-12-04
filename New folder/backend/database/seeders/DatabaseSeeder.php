@@ -19,7 +19,9 @@ class DatabaseSeeder extends Seeder
             AthleteSeeder::class,
             DrillCategorySeeder::class,
             GameDrillSeeder::class,
-            GameScheduleSeeder::class
+            GameScheduleSeeder::class,
+            EvaluationSeeder::class,
+            EvaluationCategorySeeder::class
         ]);
     }
 }

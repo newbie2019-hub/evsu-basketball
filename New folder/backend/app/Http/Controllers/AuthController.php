@@ -15,12 +15,12 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
-        if (Auth::attempt($request->only('email', 'password'))) {
+        if (Auth::attempt($request->only('email', 'password'), $request->remember_me)) {
             $user = Auth::user();
 
             $token = $user->createToken('auth')->accessToken;
 
-            return $this->success('User authenticated successfully!', ['access_token' => $token, 'user' => $user]);
+            return $this->success('Welcome back, ' . $user->last_name . '!', ['access_token' => $token, 'user' => $user]);
         }
 
         return $this->error('User credentials are invalid');
@@ -32,6 +32,23 @@ class AuthController extends Controller
         return $this->success('Account created successfully!');
     }
 
+    public function update(RegisterRequest $request)
+    {
+
+        if ($request->hasFile('image')) {
+            $fileName = 'image'.time().'.'.$request->image->extension();
+            auth()->user()->update(['photo' => $fileName]);
+            $request->file('image')->move(public_path('images/profile'), $fileName);
+        }
+
+        if(!$request->photo) {
+            auth()->user()->update(['photo' => null]);
+        }
+
+        auth()->user()->update($request->validated());
+        return $this->success('Account information has been updated successfully!');
+    }
+
     public function authUser()
     {
         return $this->success('User authenticated', ['user' => auth('api')->user()]);
@@ -40,7 +57,6 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $request->user()->token()->revoke();
-        // auth('api')->logout();
 
         return $this->success('User logged out successfully!');
     }

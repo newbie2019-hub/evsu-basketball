@@ -16,10 +16,14 @@ class GameScheduleFactory extends Factory
      */
     public function definition()
     {
+        $types = ["Practice Drills", "Practice Game", "Official Game", "Conditioning", "Individual Training"];
+        $name = ["Game Preparation", "Strength Conditioning", "Hand Strength"];
+
         return [
-           'schedule' => fake()->dateTimeBetween('-2 weeks', '+4 weeks'),
-           'name' => 'Strength Conditioning',
-           'type' => 'Practice Drills'
+            'name' => fake()->randomElement($name),
+            'description' => fake()->sentence(8),
+            'type' => fake()->randomElement($types),
+            'schedule' => fake()->dateTimeBetween('-2 weeks', '+4 weeks'),
         ];
     }
 }

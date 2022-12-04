@@ -4,8 +4,12 @@ use App\Http\Controllers\AthletesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DrillCategoryController;
+use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\GameDrillController;
 use App\Http\Controllers\GameScheduleController;
+use App\Http\Controllers\PerformanceEvaluationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,11 +33,22 @@ Route::controller(AuthController::class)->group(function () {
 
 Route::group(['middleware' => 'auth:api'], function () {
     Route::controller(AuthController::class)->group(function () {
+        Route::post('update', 'update');
         Route::post('logout', 'logout');
         Route::get('authUser', 'authUser');
     });
 
+    Route::get('dashboard', [DashboardController::class, 'getData']);
+    Route::apiResource('performances', PerformanceEvaluationController::class);
+
+    Route::get('evaluations/all', [EvaluationController::class, 'getEvaluations']);
+    Route::apiResource('evaluations', EvaluationController::class);
+
+    Route::get('getAthletes', [AthletesController::class, 'getAthletes']);
     Route::apiResource('athletes', AthletesController::class);
     Route::apiResource('gameschedule', GameScheduleController::class);
     Route::apiResource('drills', GameDrillController::class);
+
+    Route::get('categories/all', [DrillCategoryController::class, 'all']);
+    Route::apiResource('categories', DrillCategoryController::class);
 });

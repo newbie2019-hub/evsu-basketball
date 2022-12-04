@@ -28,6 +28,16 @@ const routes = [
         component: () => import("../views/GameSchedule.vue"),
       },
       {
+        path: "evaluations",
+        name: "Evaluations",
+        component: () => import("../views/EvaluationData.vue"),
+      },
+      {
+        path: "performance-new",
+        name: "New Performance",
+        component: () => import("../views/NewPerformance.vue"),
+      },
+      {
         path: "drills",
         name: "Drills",
         component: () => import("../views/GameDrills.vue"),

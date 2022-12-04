@@ -19,7 +19,6 @@ export const useDrillsStore = defineStore("drillStore", () => {
   }
 
   function update(data) {
-    console.log('Passed Data: ', data)
     return api.put(`drills/${data.id}`, data);
   }
 

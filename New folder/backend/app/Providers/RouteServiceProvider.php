@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\DrillCategory;
+use App\Models\GameDrill;
 use App\Models\GameSchedule;
+use App\Models\PerformanceEvaluation;
 use App\Models\User;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
@@ -41,6 +44,9 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::model('athlete', User::class);
         Route::model('gameschedule', GameSchedule::class);
+        Route::model('category', DrillCategory::class);
+        Route::model('drill', GameDrill::class);
+        Route::model('performance', PerformanceEvaluation::class);
     }
 
     /**

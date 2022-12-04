@@ -9,9 +9,15 @@ export const useAthleteStore = defineStore("athleteStore", () => {
     const prop = typeof page === 'object'
     const p =  prop ? page.pagination.page : page
     const search = prop ? page.pagination.search : ''
+    const sortBy = prop ? page.pagination.sortBy : ''
+    const descending = prop ? page.pagination.descending : ''
     const perPage = prop ? page.pagination.rowsPerPage : 10
 
-    return api.get(`athletes?page=${p}&search=${search}&per_page=${perPage}`);
+    return api.get(`athletes?page=${p}&search=${search}&per_page=${perPage}&sortBy=${sortBy}&descending=${descending}`);
+  }
+
+  function athleteOptions(search){
+    return api.get(`getAthletes?search=${search}`)
   }
 
   function deleteAthlete(data) {
@@ -27,5 +33,5 @@ export const useAthleteStore = defineStore("athleteStore", () => {
     return api.post("athletes", data);
   }
 
-  return { athletes, get, deleteAthlete, update, create };
+  return { athletes, get, deleteAthlete, update, create, athleteOptions };
 });

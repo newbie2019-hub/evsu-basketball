@@ -16,7 +16,6 @@ class GameDrill extends Model
         return $date->format('F j, Y h:i A');
     }
 
-
     public function category()
     {
         return $this->hasOne(DrillCategory::class, 'id', 'drill_category_id');

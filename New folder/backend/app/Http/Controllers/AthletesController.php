@@ -11,6 +11,7 @@ class AthletesController extends Controller
 {
     use ApiResponse;
 
+
     public function index(Request $request)
     {
         $athletes = User::where('user_type', '<>', 'admin')
@@ -35,9 +36,23 @@ class AthletesController extends Controller
         return $this->success('User data updated successfully!');
     }
 
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        User::destroy($id);
+        $user->delete();
         return $this->success('Athlete\'s data was removed successfully!');
+    }
+
+
+    public function getAthletes(Request $request)
+    {
+
+        $athletes = User::where('user_type', '<>', 'admin')
+        ->when($request->search, fn ($query, $search)
+            => $query->where('first_name', 'like', '%' . $search . '%')
+            ->orWhere('last_name', 'like', '%'. $search .'%')
+            ->orWhere('email', 'like', '%'. $search .'%'))
+        ->latest()->take(10)->get(['id','first_name','last_name', 'email']);
+
+        return $this->data($athletes);
     }
 }

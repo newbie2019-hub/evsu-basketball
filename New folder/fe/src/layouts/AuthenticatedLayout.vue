@@ -11,11 +11,19 @@
         >
         <div class="q-pr-sm">
           <q-avatar size="32px" class="cursor-pointer">
-            <img src="https://cdn.quasar.dev/img/avatar.png" />
+            <img
+              v-if="user.photo && user.photo !== 'null'"
+              :src="`http://127.0.0.1:8000/images/profile/${user.photo}`"
+            />
+            <img :src="`https://robohash.org/${user.id}`" />
             <q-menu>
               <div class="column justify-center items-center q-px-md">
                 <q-avatar size="62px" class="cursor-pointer q-mt-md">
-                  <img src="https://cdn.quasar.dev/img/avatar.png" />
+                  <img
+                    v-if="user.photo && user.photo !== 'null'"
+                    :src="`http://127.0.0.1:8000/images/profile/${user.photo}`"
+                  />
+                  <img :src="`https://robohash.org/${user.id}`" />
                 </q-avatar>
                 <p class="q-mb-none q-mt-sm">
                   {{ user.first_name }} {{ user.last_name }}
@@ -23,7 +31,7 @@
                 <p class="text-caption ellipsis">{{ user.email }}</p>
               </div>
               <q-list style="min-width: 150px">
-                <q-item clickable v-close-popup>
+                <q-item clickable v-close-popup to="/settings">
                   <q-item-section class="text-no-wrap"
                     >Account Settings</q-item-section
                   >
@@ -59,20 +67,20 @@
         "
       >
         <q-list padding>
-          <q-item
-            clickable
-            :active="navroute.name == route.name"
-            v-ripple
-            :to="navroute.to"
-            v-for="(navroute, i) in links"
-            :key="i"
-          >
-            <q-item-section avatar>
-              <q-icon :name="navroute.icon" size="20px" color="grey-5" />
-            </q-item-section>
-
-            <q-item-section> {{ navroute.name }} </q-item-section>
-          </q-item>
+          <template v-for="(navroute, i) in links" :key="i">
+            <q-item
+              v-if="renderRoute(navroute)"
+              clickable
+              :active="navroute.name == route.name"
+              v-ripple
+              :to="navroute.to"
+            >
+              <q-item-section avatar>
+                <q-icon :name="navroute.icon" size="20px" color="grey-5" />
+              </q-item-section>
+              <q-item-section> {{ navroute.name }} </q-item-section>
+            </q-item>
+          </template>
         </q-list>
       </q-scroll-area>
 
@@ -81,8 +89,12 @@
         src="../assets/images/bg-header.jpg"
         style="height: 150px"
       >
-        <div v-if="profileShown" class="absolute-bottom bg-transparent">
+        <div v-show="profileShown" class="absolute-bottom bg-transparent">
           <q-avatar color="primary" size="56px" class="q-mb-sm">
+            <img
+              v-if="user.photo && user.photo !== 'null'"
+              :src="`http://127.0.0.1:8000/images/profile/${user.photo}`"
+            />
             <img :src="`https://robohash.org/${user.id}`" />
           </q-avatar>
           <div class="text-weight-bold">
@@ -94,7 +106,7 @@
         </div>
       </q-img>
       <div
-        v-if="screen.lt.sm"
+        v-show="screen.lt.sm"
         class="q-mini-drawer-hide absolute"
         style="top: 100px; right: -14px"
       >
@@ -110,7 +122,7 @@
     </q-drawer>
 
     <q-page-container>
-      <div class="row items-center justify-center q-my-md">
+      <div class="row items-center justify-center">
         <div class="col-12">
           <router-view />
         </div>
@@ -139,6 +151,18 @@ onBeforeMount(async () => {
   user = data.data.user;
 });
 
+const renderRoute = (r) => {
+  if(user.user_type === 'admin') {
+    return true;
+  }
+
+  if(r.user_type === 'admin' && user.user_type == 'user'){
+    return false;
+  }
+
+  return true
+}
+
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 };
@@ -155,7 +179,7 @@ const profileShown = computed(() => {
   return true;
 });
 
-const userLogout = async() => {
+const userLogout = async () => {
   const { status, data } = await logout();
 
   if (status === 200) {
@@ -163,8 +187,7 @@ const userLogout = async() => {
     localStorage.removeItem("user_data");
     router.push("/login");
   }
-
-}
+};
 </script>
 <style>
 .q-item__section--side {
@@ -177,5 +200,13 @@ a.q-item--active div.q-item__section--side i {
 
 a.q-item--active .q-item__section.q-item__section--main {
   font-weight: 600;
+}
+
+.padding-left-none {
+  padding-left: 40px !important;
+}
+
+.padding-left-none.padding-drawer-expanded {
+  padding-left: 184px !important;
 }
 </style>

@@ -15,7 +15,8 @@ class GameDrillController extends Controller
     {
         $gameschedule = GameDrill::with('category')->when($request->search, fn ($query, $search)
             => $query->where('description', 'like', '%' . $search . '%')
-            ->orWhere('drill', 'like', '%'. $search .'%'))
+            ->orWhere('drill', 'like', '%'. $search .'%')
+            ->orWhereRelation('category', 'category', 'like', '%'. $search .'%'))
         ->paginate($request->per_page);
 
         return $this->data($gameschedule);
@@ -27,15 +28,15 @@ class GameDrillController extends Controller
         return $this->success('Game Drill created successfully!');
     }
 
-    public function update(GameDrillRequest $request, GameDrill $user)
+    public function update(GameDrillRequest $request, GameDrill $drill)
     {
-        $user->update($request->validated());
-        return $this->success('Game schedule has been updated successfully!');
+        $drill->update($request->validated());
+        return $this->success('Game Drill has been updated successfully!');
     }
 
-    public function destroy($id)
+    public function destroy(GameDrill $drill)
     {
-        GameDrill::destroy($id);
+        $drill->delete();
         return $this->success('Game Drill has been removed successfully!');
     }
 }

@@ -15,10 +15,13 @@ return new class extends Migration
     {
         Schema::create('game_drills', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('drill_category_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('drill_category_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('drill');
             $table->string('description');
-            $table->string('duration');
+            $table->text('instructions')->nullable();
+            $table->string('hours');
+            $table->string('minutes');
+            $table->string('seconds');
             $table->timestamps();
         });
     }

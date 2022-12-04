@@ -13,7 +13,7 @@ class GameDrillRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,13 @@ class GameDrillRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'drill' => 'required|min:3',
+            'description' => 'required|min:6',
+            'instructions' => 'required',
+            'drill_category_id' => 'required|exists:drill_categories,id',
+            'hours' => 'required',
+            'minutes' => 'required',
+            'seconds' => 'required',
         ];
     }
 }

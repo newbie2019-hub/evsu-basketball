@@ -18,9 +18,11 @@ class GameDrillFactory extends Factory
     {
         return [
             'drill_category_id' => fake()->numberBetween(1, 7),
-            'drill' => fake()->sentence(6),
-            'description' => fake()->sentence(20),
-            'duration' => fake()->numberBetween(10, 300),
+            'drill' => fake()->sentence(4),
+            'description' => fake()->sentence(15),
+            'hours' => '00',
+            'minutes' => fake()->numberBetween(1, 59),
+            'seconds' => fake()->numberBetween(5, 59),
         ];
     }
 }

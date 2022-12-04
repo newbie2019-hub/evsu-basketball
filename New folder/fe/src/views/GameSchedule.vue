@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="q-my-md">
     <q-table
       flat
       class="my-sticky-column-table"
@@ -11,7 +11,12 @@
       :loading="loading"
       @request="getData"
     >
-      <template #top-left>
+      <template #body-cell-description="props">
+        <q-td :props="props" class="ellipsis" style="max-width: 240px">
+          {{ props.row.description }}
+        </q-td>
+      </template>
+      <template #top-left v-if="user.value.user_type == 'admin'">
         <div>
           <q-btn
             @click.prevent="addModal = true"
@@ -147,8 +152,10 @@
             hide-bottom-space
             class="q-mt-sm"
             dense
-            v-model="selectedSchedule.schedule"
-            label="Schedule"
+            type="textarea"
+            autogrow
+            v-model="selectedSchedule.description"
+            label="Description"
           />
           <q-select
             outlined
@@ -160,6 +167,51 @@
             :options="gameType"
             label="Type"
           />
+          <q-input
+            outlined
+            hide-bottom-space
+            dense
+            v-model="selectedSchedule.schedule"
+            class="q-mt-sm"
+          >
+            <template v-slot:prepend>
+              <q-icon name="event" class="cursor-pointer">
+                <q-popup-proxy
+                  cover
+                  transition-show="scale"
+                  transition-hide="scale"
+                >
+                  <q-date
+                    v-model="selectedSchedule.schedule"
+                    mask="YYYY-MM-DD HH:mm"
+                  >
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup label="Close" color="primary" flat />
+                    </div>
+                  </q-date>
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+
+            <template v-slot:append>
+              <q-icon name="access_time" class="cursor-pointer">
+                <q-popup-proxy
+                  cover
+                  transition-show="scale"
+                  transition-hide="scale"
+                >
+                  <q-time
+                    v-model="selectedSchedule.schedule"
+                    mask="YYYY-MM-DD HH:mm"
+                  >
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup label="Close" color="primary" flat />
+                    </div>
+                  </q-time>
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+          </q-input>
         </q-form>
       </q-card-section>
 
@@ -203,7 +255,34 @@
             v-model="gameSchedule.name"
             label="Name"
           />
-          <q-input outlined hide-bottom-space dense v-model="gameSchedule.schedule" class="q-mt-sm">
+          <q-input
+            outlined
+            :rules="[required, minLength]"
+            hide-bottom-space
+            class="q-mt-sm"
+            dense
+            type="textarea"
+            autogrow
+            v-model="gameSchedule.description"
+            label="Description"
+          />
+          <q-select
+            outlined
+            :rules="[required]"
+            hide-bottom-space
+            class="q-mt-sm"
+            dense
+            v-model="gameSchedule.type"
+            :options="gameType"
+            label="Type"
+          />
+          <q-input
+            outlined
+            hide-bottom-space
+            dense
+            v-model="gameSchedule.schedule"
+            class="q-mt-sm"
+          >
             <template v-slot:prepend>
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy
@@ -211,7 +290,10 @@
                   transition-show="scale"
                   transition-hide="scale"
                 >
-                  <q-date v-model="gameSchedule.schedule" mask="YYYY-MM-DD HH:mm">
+                  <q-date
+                    v-model="gameSchedule.schedule"
+                    mask="YYYY-MM-DD HH:mm"
+                  >
                     <div class="row items-center justify-end">
                       <q-btn v-close-popup label="Close" color="primary" flat />
                     </div>
@@ -227,7 +309,10 @@
                   transition-show="scale"
                   transition-hide="scale"
                 >
-                  <q-time v-model="gameSchedule.schedule" mask="YYYY-MM-DD HH:mm" format24h>
+                  <q-time
+                    v-model="gameSchedule.schedule"
+                    mask="YYYY-MM-DD HH:mm"
+                  >
                     <div class="row items-center justify-end">
                       <q-btn v-close-popup label="Close" color="primary" flat />
                     </div>
@@ -236,16 +321,6 @@
               </q-icon>
             </template>
           </q-input>
-          <q-select
-            outlined
-            :rules="[required]"
-            hide-bottom-space
-            class="q-mt-sm"
-            dense
-            v-model="gameSchedule.type"
-            :options="gameType"
-            label="Type"
-          />
         </q-form>
       </q-card-section>
 
@@ -276,6 +351,7 @@ import { onBeforeMount, ref } from "vue";
 import { useToast } from "vue-toastification";
 import { useServerPaginate } from "../composable/useServerPaginate";
 import { useFieldRules } from "../composable/useFieldRules";
+import { useAuthStore } from "src/stores/authentication";
 
 const columns = [
   {
@@ -283,6 +359,13 @@ const columns = [
     label: "Name",
     align: "left",
     field: (row) => row.name,
+    sortable: false,
+  },
+  {
+    name: "description",
+    label: "Description",
+    align: "left",
+    field: (row) => row.description,
     sortable: false,
   },
   {
@@ -320,6 +403,7 @@ const confirmDelete = ref(false);
 const addModal = ref(false);
 const updateModal = ref(false);
 const loading = ref(false);
+const { user } = useAuthStore()
 
 const gameType = [
   "Official Game",

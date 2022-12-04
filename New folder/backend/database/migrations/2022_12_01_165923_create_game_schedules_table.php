@@ -16,8 +16,9 @@ return new class extends Migration
         Schema::create('game_schedules', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('schedule');
+            $table->string('description');
             $table->string('type', 100);
+            $table->string('schedule');
             $table->timestamps();
         });
     }

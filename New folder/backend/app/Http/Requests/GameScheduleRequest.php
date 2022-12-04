@@ -26,6 +26,7 @@ class GameScheduleRequest extends FormRequest
         return [
             'schedule' => 'required',
             'name' => 'required',
+            'description' => 'required',
             'type' => 'required'
         ];
     }

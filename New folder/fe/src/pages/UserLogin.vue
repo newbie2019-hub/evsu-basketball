@@ -22,16 +22,25 @@
               hide-bottom-space
               v-model="formData.password"
               label="Password"
-              type="password"
               lazy-rules
+              :type="passwordShown ? 'text' : 'password'"
               :rules="[
                 (val) =>
                   (val !== null && val !== '') || 'Password Field is required',
               ]"
-            />
-            <q-toggle
+            >
+              <template v-slot:append>
+                <q-icon
+                  :name="passwordShown ? 'visibility_off' : 'visibility'"
+                  class="cursor-pointer"
+                  @click="passwordShown = !passwordShown"
+                />
+              </template>
+            </q-input>
+            <q-checkbox
               v-model="formData.remember_me"
               label="Keep me logged in"
+              class="q-pa-none q-ml-sm q-mt-sm"
             />
             <div>
               <q-btn
@@ -43,6 +52,11 @@
                 :loading="isLoading"
               />
             </div>
+            <q-separator class="q-mt-md block"></q-separator>
+            <p class="text-center">
+              Dont have an account?
+              <router-link to="/register" style="text-decoration: none;">Sign-up</router-link>
+            </p>
           </q-form>
         </q-card-section>
       </q-card>
@@ -61,6 +75,7 @@ const router = useRouter();
 
 const { login, user } = useAuthStore();
 const isLoading = ref(false);
+const passwordShown = ref(false);
 const formData = ref({ email: "", password: "", remember_me: false });
 
 const loginAccount = async () => {
