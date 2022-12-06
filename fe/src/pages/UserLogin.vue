@@ -73,19 +73,19 @@ import {} from "quasar";
 const toast = useToast();
 const router = useRouter();
 
-const { login, user } = useAuthStore();
+const authUser = useAuthStore();
 const isLoading = ref(false);
 const passwordShown = ref(false);
 const formData = ref({ email: "", password: "", remember_me: false });
 
 const loginAccount = async () => {
   isLoading.value = true;
-  const { status, data } = await login(formData.value);
+  const { status, data } = await authUser.login(formData.value);
   if (status == 200) {
     Cookies.set("access_token", data.data.access_token);
     localStorage.setItem("user_data", JSON.stringify(data.data.user));
 
-    user.value = data.data.user;
+    authUser.user = data.data.user;
 
     toast.success(data.msg);
     router.push("/");
