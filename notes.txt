@@ -1,0 +1,71 @@
+Registration Data
+first_name
+last_name
+gender
+weight
+height
+date_of_birth
+address
+email
+contact
+password
+position
+
+Player Performance
+user_id
+
+Prioritize
+1. Teams
+ - Adding team member
+ - Updating team member
+
+2. Evaluation
+ -> Shooting
+   -> has subcategory
+ -> Dribbling
+ -> Passing
+ -> Defense
+ -> Rebounding
+ -> Athletic Ability
+ -> Game play
+ -> Coachability
+ -> Overall Strength
+
+Create practice session
+-> start timer
+-> select drills
+ -> for each selected drill add max points
+-> select players
+
+Create team
+
+*performance_eval
+id
+user_id
+comment
+
+*performance_eval_categories
+performance_eval_id
+eval_categ_id
+score
+max_score
+
+For Table
+athlete
+email
+height
+weight
+performance
+comment
+date
+ -> should have view data
+
+
+*Dashboard
+athlete
+schedules
+drills
+drills_category
+evaluations
+ -> add table of user
+ -> add table of evaluation

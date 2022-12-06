@@ -1,0 +1,40 @@
+Training Sessions
+Theme
+
+Dashboard - Differs 
+- Charts
+- Summary
+- Table
+
+Player
+ - View Data
+ - Account Settings
+
+Game Rating
+EFF
+ - Shooting
+ - 
+
+Bugs
+ - Evaluation Update
+
+Head Coach [x]
+ - Assign assistant coach
+   -> Assign players
+   -> Assign Prio Drills for Individual Players
+ -
+
+Types of Coach
+ Dynamic Categories
+   Strength   
+
+
+Teams
+ - Add Teams (Select Athletes)
+
+Athlete
+ - Dropdown <Select> Team (Filter)
+
+Evaluation 
+ - Add Legends 
+
