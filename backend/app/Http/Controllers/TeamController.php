@@ -21,7 +21,6 @@ class TeamController extends Controller
             ->orWhereRelation('user', 'last_name', 'like', '%'. $search .'%'))
         ->paginate($request->per_page);
 
-        // $teams->players()->attach();
         return $this->data($teams);
     }
 
@@ -58,5 +57,15 @@ class TeamController extends Controller
     {
         $team->delete();
         return $this->success('Team has been removed successfully!');
+    }
+
+    public function getTeams(Request $request)
+    {
+
+        $teams = Team::when($request->filter_by_team, fn ($query, $search)
+            => $query->where('team', 'like', '%' . $search . '%'))
+        ->latest()->take(5)->get();
+
+        return $this->data($teams);
     }
 }

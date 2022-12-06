@@ -6,6 +6,7 @@ use App\Models\DrillCategory;
 use App\Models\GameDrill;
 use App\Models\GameSchedule;
 use App\Models\PerformanceEvaluation;
+use App\Models\PlayerPerformance;
 use App\Models\User;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
@@ -47,6 +48,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('category', DrillCategory::class);
         Route::model('drill', GameDrill::class);
         Route::model('performance', PerformanceEvaluation::class);
+        Route::model('statistic', PlayerPerformance::class);
     }
 
     /**

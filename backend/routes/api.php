@@ -10,6 +10,7 @@ use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\GameDrillController;
 use App\Http\Controllers\GameScheduleController;
 use App\Http\Controllers\PerformanceEvaluationController;
+use App\Http\Controllers\PlayerStatisticsController;
 use App\Http\Controllers\TeamController;
 
 /*
@@ -45,12 +46,15 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('evaluations/all', [EvaluationController::class, 'getEvaluations']);
     Route::apiResource('evaluations', EvaluationController::class);
 
+    Route::get('getTeams', [TeamController::class, 'getTeams']);
     Route::apiResource('teams', TeamController::class);
 
     Route::get('getAthletes', [AthletesController::class, 'getAthletes']);
     Route::apiResource('athletes', AthletesController::class);
     Route::apiResource('gameschedule', GameScheduleController::class);
     Route::apiResource('drills', GameDrillController::class);
+
+    Route::apiResource('statistics', PlayerStatisticsController::class);
 
     Route::get('categories/all', [DrillCategoryController::class, 'all']);
     Route::apiResource('categories', DrillCategoryController::class);

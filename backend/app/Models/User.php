@@ -65,6 +65,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function team()
+    {
+        return $this->hasOne(TeamPlayer::class, 'user_id', 'id');
+    }
+
     protected function password(): Attribute
     {
         return Attribute::make(

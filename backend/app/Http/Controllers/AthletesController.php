@@ -14,12 +14,19 @@ class AthletesController extends Controller
 
     public function index(Request $request)
     {
-        $athletes = User::where('user_type', '<>', 'admin')
-        ->when($request->search, fn ($query, $search)
+        $teamQuery = $request->filter_by_team == 'null' ? '' : $request->filter_by_team;
+
+        $athletes = User::with('team.team')->where('user_type', '<>', 'admin')
+            ->when(
+                $teamQuery,
+                fn ($query, $team)
+                => $query->whereRelation('team.team', 'id', $team)
+            )
+            ->when($request->search, fn ($query, $search)
             => $query->where('first_name', 'like', '%' . $search . '%')
-            ->orWhere('last_name', 'like', '%'. $search .'%')
-            ->orWhere('email', 'like', '%'. $search .'%'))
-        ->orderBy('first_name', 'asc')->paginate($request->per_page);
+                ->orWhere('last_name', 'like', '%' . $search . '%')
+                ->orWhere('email', 'like', '%' . $search . '%'))
+            ->orderBy('first_name', 'asc')->paginate($request->per_page);
 
         return $this->data($athletes);
     }
@@ -47,11 +54,11 @@ class AthletesController extends Controller
     {
 
         $athletes = User::where('user_type', '<>', 'admin')
-        ->when($request->search, fn ($query, $search)
+            ->when($request->search, fn ($query, $search)
             => $query->where('first_name', 'like', '%' . $search . '%')
-            ->orWhere('last_name', 'like', '%'. $search .'%')
-            ->orWhere('email', 'like', '%'. $search .'%'))
-        ->latest()->take(10)->get(['id','first_name','last_name', 'email']);
+                ->orWhere('last_name', 'like', '%' . $search . '%')
+                ->orWhere('email', 'like', '%' . $search . '%'))
+            ->latest()->take(10)->get(['id', 'first_name', 'last_name', 'email']);
 
         return $this->data($athletes);
     }
