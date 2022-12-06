@@ -97,7 +97,8 @@
           Confirm Delete
         </p>
         <p class="q-mb-none q-mt-sm">
-          Are you sure you want to delete this team? All of its players will be unassigned from this team.
+          Are you sure you want to delete this team? All of its players will be
+          unassigned from this team.
         </p>
       </q-card-section>
 
@@ -128,9 +129,7 @@
         <p class="q-mb-none text-weight-medium" style="font-size: 1.1rem">
           Update Team
         </p>
-        <p class="q-mb-none">
-          Update your team's information
-        </p>
+        <p class="q-mb-none">Update your team's information</p>
       </q-card-section>
       <q-card-section class="q-pt-none" style="max-height: 400px">
         <q-form ref="form" @submit="updateTeam" class="q-mt-md">
@@ -153,6 +152,28 @@
             v-model="selectedTeam.description"
             label="Description"
           />
+          <q-select
+            outlined
+            dense
+            multiple
+            class="q-mt-sm"
+            v-model="selectedTeam.user_id"
+            use-input
+            input-debounce="300"
+            label="Select Athlete"
+            :options="athletes"
+            option-value="id"
+            :option-label="(item) => item.first_name + ' ' + item.last_name"
+            @filter="filterFn"
+            emit-value
+            map-options
+          >
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey"> No results </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
         </q-form>
       </q-card-section>
 
@@ -183,11 +204,12 @@
         <p class="q-mb-none text-weight-medium" style="font-size: 1.1rem">
           Add Team
         </p>
-        <p class="q-mb-none">
-          All fields are required for saving a team
-        </p>
+        <p class="q-mb-none">All fields are required for saving a team</p>
       </q-card-section>
-      <q-card-section class="q-pt-none" style="min-width: 350px; max-height: 400px">
+      <q-card-section
+        class="q-pt-none"
+        style="min-width: 350px; max-height: 400px"
+      >
         <q-form ref="saveForm" @submit="saveTeam" class="q-mt-md">
           <q-input
             outlined
@@ -207,6 +229,28 @@
             v-model="teamData.description"
             label="Description"
           />
+          <q-select
+            outlined
+            dense
+            multiple
+            class="q-mt-sm"
+            v-model="teamData.user_id"
+            use-input
+            input-debounce="300"
+            label="Select Athlete"
+            :options="athletes"
+            option-value="id"
+            :option-label="(item) => item.first_name + ' ' + item.last_name"
+            @filter="filterFn"
+            emit-value
+            map-options
+          >
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey"> No results </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
         </q-form>
       </q-card-section>
 
@@ -237,6 +281,7 @@ import { onBeforeMount, ref } from "vue";
 import { useToast } from "vue-toastification";
 import { useServerPaginate } from "../composable/useServerPaginate";
 import { useFieldRules } from "../composable/useFieldRules";
+import { useAthleteStore } from "src/stores/athletes";
 
 const columns = [
   {
@@ -283,6 +328,8 @@ const teamData = ref({
   email: "",
   contact: "",
 });
+
+const { athleteOptions } = useAthleteStore();
 const selectedTeam = ref({});
 const confirmDelete = ref(false);
 const addModal = ref(false);
@@ -297,6 +344,7 @@ const isBtnLoading = ref(false);
 const toast = useToast();
 const form = ref("");
 const saveForm = ref("");
+const athletes = ref([]);
 
 const toggleCreateModal = () => (addModal.value = !addModal.value);
 
@@ -368,9 +416,7 @@ const updateTeam = async () => {
 
 const deleteTeam = async () => {
   isBtnLoading.value = true;
-  const { data, status } = await teamStore.deleteTeam(
-    selectedTeam.value.id
-  );
+  const { data, status } = await teamStore.deleteTeam(selectedTeam.value.id);
 
   if (status === 200) {
     toast.success(data.msg);
@@ -379,6 +425,19 @@ const deleteTeam = async () => {
 
   isBtnLoading.value = false;
   toggleDeleteModal();
+};
+
+const filterFn = (val, update) => {
+  if (val === "") {
+    update(async () => {
+      return ["Search"];
+    });
+  }
+
+  update(async () => {
+    const { data } = await athleteOptions(val);
+    athletes.value = data;
+  });
 };
 </script>
 
