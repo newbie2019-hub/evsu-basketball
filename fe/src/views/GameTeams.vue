@@ -64,8 +64,7 @@
           >
             <q-btn
               @click.prevent="
-                updateModal = true;
-                selectedTeam = JSON.parse(JSON.stringify(props.row));
+                showUpdateTeam(JSON.parse(JSON.stringify(props.row)))
               "
               flat
               size="10px"
@@ -321,16 +320,13 @@ const columns = [
 ];
 
 const teamData = ref({
-  position: "",
-  first_name: "",
-  last_name: "",
-  address: "",
-  email: "",
-  contact: "",
+  team: "",
+  description: "",
+  user_id: [],
 });
 
 const { athleteOptions } = useAthleteStore();
-const selectedTeam = ref({});
+const selectedTeam = ref({ players: [], user_id: [] });
 const confirmDelete = ref(false);
 const addModal = ref(false);
 const updateModal = ref(false);
@@ -349,6 +345,20 @@ const athletes = ref([]);
 const toggleCreateModal = () => (addModal.value = !addModal.value);
 
 const toggleDeleteModal = () => (confirmDelete.value = !confirmDelete.value);
+
+const showUpdateTeam = (data) => {
+  console.log(data);
+
+  selectedTeam.value = data;
+  selectedTeam.value.user_id = [];
+
+  data.players?.map((player) => {
+    selectedTeam.value.user_id.push(player.user_id);
+  });
+
+  console.log('Selected Team: ', selectedTeam.value)
+  updateModal.value = true;
+};
 
 const submitForm = async () => {
   await form.value.submit();
