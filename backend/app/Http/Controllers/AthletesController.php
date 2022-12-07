@@ -56,11 +56,13 @@ class AthletesController extends Controller
     {
 
         $athletes = User::where('user_type', '<>', 'admin')
-            ->when($request->search, fn ($query, $search)
-            => $query->where('first_name', 'like', '%' . $search . '%')
-                ->orWhere('last_name', 'like', '%' . $search . '%')
-                ->orWhere('email', 'like', '%' . $search . '%'))
-            ->latest()->take(10)->get(['id', 'first_name', 'last_name', 'email']);
+            ->where('position', '<>', 'Assistant-Coach')
+            ->where(function ($query) use($request) {
+                $query->when($request->search, fn ($query, $search)
+                => $query->where('first_name', 'like', '%' . $search . '%')
+                    ->orWhere('last_name', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%'));
+            })->latest()->take(10)->get(['id', 'first_name', 'last_name', 'email']);
 
         return $this->data($athletes);
     }
