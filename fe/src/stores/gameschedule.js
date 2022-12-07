@@ -4,6 +4,7 @@ import { ref, computed } from "vue";
 
 export const useGameScheduleStore = defineStore("gameScheduleStore", () => {
   let gameschedule = ref([]);
+  let schedules = ref([]);
 
   function get(page) {
     const prop = typeof page === 'object'
@@ -26,5 +27,9 @@ export const useGameScheduleStore = defineStore("gameScheduleStore", () => {
     return api.post("gameschedule", data);
   }
 
-  return { gameschedule, get, deleteSchedule, update, create };
+  function getSchedules() {
+    return api.get("schedules");
+  }
+
+  return { gameschedule, get, deleteSchedule, update, create, getSchedules, schedules };
 });

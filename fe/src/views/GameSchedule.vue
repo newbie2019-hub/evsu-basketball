@@ -1,5 +1,11 @@
 <template>
   <div class="q-my-md">
+    <calendar-schedule
+      :data="schedules"
+      style="height: 400px"
+    />
+  </div>
+  <div class="q-my-md">
     <q-table
       flat
       class="my-sticky-column-table"
@@ -352,6 +358,7 @@ import { useToast } from "vue-toastification";
 import { useServerPaginate } from "../composable/useServerPaginate";
 import { useFieldRules } from "../composable/useFieldRules";
 import { useAuthStore } from "src/stores/authentication";
+import CalendarSchedule from "../components/CalendarSchedule.vue";
 
 const columns = [
   {
@@ -421,6 +428,7 @@ const isBtnLoading = ref(false);
 const toast = useToast();
 const form = ref("");
 const saveForm = ref("");
+const schedules = ref([]);
 
 const toggleCreateModal = () => (addModal.value = !addModal.value);
 
@@ -435,9 +443,15 @@ const submitSaveForm = async () => {
 };
 
 onBeforeMount(async () => {
-  console.log('User: ', user)
+  await getSchedules();
   await getData();
 });
+
+const getSchedules = async () => {
+  const { data } = await gameScheduleStore.getSchedules();
+  schedules.value = data;
+  gameScheduleStore.schedules = data;
+};
 
 const getData = async (props) => {
   loading.value = true;

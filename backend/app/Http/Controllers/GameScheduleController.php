@@ -38,4 +38,10 @@ class GameScheduleController extends Controller
         $schedule->delete();
         return $this->success('Game schedule has been removed successfully!');
     }
+
+    public function schedules()
+    {
+        $gameschedule = GameSchedule::where('schedule', '>', now()->subWeeks(3))->where('schedule', '<', now()->addWeeks(3))->get();
+        return $this->data($gameschedule);
+    }
 }

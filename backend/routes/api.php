@@ -51,7 +51,12 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::get('getAthletes', [AthletesController::class, 'getAthletes']);
     Route::apiResource('athletes', AthletesController::class);
+
+    Route::get('categories/all', [DrillCategoryController::class, 'all']);
+
+    Route::get('schedules', [GameScheduleController::class, 'schedules']);
     Route::apiResource('gameschedule', GameScheduleController::class);
+
     Route::apiResource('drills', GameDrillController::class);
 
     Route::apiResource('statistics', PlayerStatisticsController::class);
