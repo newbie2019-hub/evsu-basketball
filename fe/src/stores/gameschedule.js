@@ -7,12 +7,26 @@ export const useGameScheduleStore = defineStore("gameScheduleStore", () => {
   let schedules = ref([]);
 
   function get(page) {
-    const prop = typeof page === 'object'
-    const p =  prop ? page.pagination.page : page
-    const search = prop ? page.pagination.search : ''
-    const perPage = prop ? page.pagination.rowsPerPage : 10
+    let to = "",
+      from = "";
 
-    return api.get(`gameschedule?page=${p}&search=${search}&per_page=${perPage}`);
+    const prop = typeof page === "object";
+    const p = prop ? page.pagination.page : page;
+    const search = prop ? page.pagination.search : "";
+    const perPage = prop ? page.pagination.rowsPerPage : 10;
+
+    if (prop) {
+      if (typeof page.pagination.filter_date == "object") {
+        to = page.pagination.filter_date.to;
+        from = page.pagination.filter_date.from;
+      } else {
+        from = page.pagination.filter_date;
+      }
+    }
+
+    return api.get(
+      `gameschedule?page=${p}&search=${search}&per_page=${perPage}&filter_from=${from}&filter_to=${to}`
+    );
   }
 
   function deleteSchedule(data) {
@@ -31,5 +45,13 @@ export const useGameScheduleStore = defineStore("gameScheduleStore", () => {
     return api.get("schedules");
   }
 
-  return { gameschedule, get, deleteSchedule, update, create, getSchedules, schedules };
+  return {
+    gameschedule,
+    get,
+    deleteSchedule,
+    update,
+    create,
+    getSchedules,
+    schedules,
+  };
 });

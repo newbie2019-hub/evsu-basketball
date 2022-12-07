@@ -13,10 +13,18 @@ class GameScheduleController extends Controller
 
     public function index(Request $request)
     {
-        $gameschedule = GameSchedule::when($request->search, fn ($query, $search)
-            => $query->where('name', 'like', '%' . $search . '%')
-            ->orWhere('type', 'like', '%'. $search .'%'))
-        ->paginate($request->per_page);
+        $gameschedule = GameSchedule::when(
+            $request->filter_from,
+            fn ($query, $from)
+            => $query->whereDate('schedule', '>=', $from)
+        )->when(
+            $request->filter_to,
+            fn ($query, $to)
+            => $query->whereDate('schedule', '<=', $to)
+        )->when($request->search, fn ($query, $search)
+        => $query->where('name', 'like', '%' . $search . '%')
+            ->orWhere('type', 'like', '%' . $search . '%'))
+            ->paginate($request->per_page);
 
         return $this->data($gameschedule);
     }

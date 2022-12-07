@@ -5,20 +5,16 @@
     </p>
     <p class="text-grey-7">Shown below are your summary of data</p>
     <div class="row items-stretch">
-      <div class="col-sm-6 col-md-4 col-lg-4 q-mt-sm">
+      <div class="col-sm-6 col-md-4 col-lg-3 q-mt-sm">
         <q-card unelevated class="my-card q-mr-sm q-mt-sm full-height">
           <q-card-section class="card-body">
+            <p class="q-mb-none q-mt-sm">
+              <span class="q-mb-none text-weight-bold font-count">{{
+                dashboardStore.dashboard?.user ?? "00"
+              }}</span>
+            </p>
             <p class="q-mb-none text-weight-medium" style="font-size: 1rem">
               Registered Athlete's
-            </p>
-            <p class="q-mb-none q-mt-sm">
-              There are currently
-              <span
-                class="q-mb-none text-weight-bold"
-                style="font-size: 0.8rem"
-                >{{ dashboardStore.dashboard?.user ?? "00" }}</span
-              >
-              data for the registered athlete's.
             </p>
           </q-card-section>
           <q-card-actions class="card-actions">
@@ -26,20 +22,16 @@
           </q-card-actions>
         </q-card>
       </div>
-      <div class="col-sm-6 col-md-4 col-lg-4 q-mt-sm">
+      <div class="col-sm-6 col-md-4 col-lg-3 q-mt-sm">
         <q-card unelevated class="my-card q-mr-sm q-mt-sm full-height">
           <q-card-section class="card-body">
-            <p class="q-mb-none text-weight-medium" style="font-size: 1rem">
-              Event Schedules
-            </p>
             <p class="q-mb-none q-mt-sm">
-              There are currently
-              <span
-                class="q-mb-none text-weight-bold"
-                style="font-size: 0.8rem"
-                >{{ dashboardStore.dashboard?.gameSchedule ?? "00" }}</span
-              >
-              event schedules saved on your data
+              <span class="q-mb-none text-weight-bold font-count">{{
+                dashboardStore.dashboard?.gameSchedule ?? "00"
+              }}</span>
+            </p>
+            <p class="q-mb-none text-weight-medium" style="font-size: 1rem">
+              Total Schedules
             </p>
           </q-card-section>
           <q-card-actions class="card-actions">
@@ -47,20 +39,16 @@
           </q-card-actions>
         </q-card>
       </div>
-      <div class="col-sm-6 col-md-4 col-lg-4 q-mt-sm">
+      <div class="col-sm-6 col-md-4 col-lg-3 q-mt-sm">
         <q-card unelevated class="my-card q-mr-sm q-mt-sm full-height">
           <q-card-section class="card-body">
+            <p class="q-mb-none q-mt-sm">
+              <span class="q-mb-none text-weight-bold font-count">{{
+                dashboardStore.dashboard?.evaluation ?? "00"
+              }}</span>
+            </p>
             <p class="q-mb-none text-weight-medium" style="font-size: 1rem">
               Game Evaluations
-            </p>
-            <p class="q-mb-none q-mt-sm">
-              There are currently
-              <span
-                class="q-mb-none text-weight-bold"
-                style="font-size: 0.8rem"
-                >{{ dashboardStore.dashboard?.evaluation ?? "00" }}</span
-              >
-              game evaluations setup on your records.
             </p>
           </q-card-section>
           <q-card-actions class="card-actions">
@@ -68,24 +56,37 @@
           </q-card-actions>
         </q-card>
       </div>
-      <div class="col-sm-6 col-md-4 col-lg-4 q-mt-sm">
+      <div class="col-sm-6 col-md-4 col-lg-3 q-mt-sm">
         <q-card unelevated class="my-card q-mr-sm q-mt-sm full-height">
           <q-card-section class="card-body">
-            <p class="q-mb-none text-weight-medium" style="font-size: 1rem">
-              Total Drills
-            </p>
             <p class="q-mb-none q-mt-sm">
-              There are currently
-              <span
-                class="q-mb-none text-weight-bold"
-                style="font-size: 0.8rem"
-                >{{ dashboardStore.dashboard?.drills ?? "00" }}</span
-              >
-              game drills added on your records.
+              <span class="q-mb-none text-weight-bold font-count">{{
+                dashboardStore.dashboard?.drills ?? "00"
+              }}</span>
+            </p>
+            <p class="q-mb-none text-weight-medium" style="font-size: 1rem">
+              Basketball Drills
             </p>
           </q-card-section>
           <q-card-actions class="card-actions">
             <q-btn to="/drills" flat>View All</q-btn>
+          </q-card-actions>
+        </q-card>
+      </div>
+      <div class="col-sm-6 col-md-4 col-lg-3 q-mt-sm">
+        <q-card unelevated class="my-card q-mr-sm q-mt-sm full-height">
+          <q-card-section class="card-body">
+            <p class="q-mb-none text-weight-medium" style="font-size: 1rem">
+              Total Coaches
+            </p>
+            <p class="q-mb-none q-mt-sm">
+              <span class="q-mb-none text-weight-bold font-count">{{
+                dashboardStore.dashboard?.coach ?? "00"
+              }}</span>
+            </p>
+          </q-card-section>
+          <q-card-actions class="card-actions">
+            <q-btn to="/coaches" flat>View All</q-btn>
           </q-card-actions>
         </q-card>
       </div>
@@ -106,13 +107,13 @@ onMounted(async () => {
 <style>
 .card-actions {
   position: absolute;
-  bottom: 0;
+  top: 0;
   display: flex;
   justify-content: flex-end;
   width: 100%;
 }
 
-.card-body {
-  padding-bottom: 4rem !important;
+.font-count {
+  font-size: 2.5rem;
 }
 </style>

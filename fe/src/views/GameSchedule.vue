@@ -1,13 +1,11 @@
 <template>
   <div class="q-my-md">
-    <calendar-schedule
-      :data="schedules"
-      style="height: 400px"
-    />
+    <calendar-schedule :data="schedules" style="height: 400px" />
   </div>
   <div class="q-my-md">
     <q-table
       flat
+      ref="scheduleTable"
       class="my-sticky-column-table"
       :rows="gameScheduleStore.gameschedule.data"
       :columns="columns"
@@ -37,6 +35,35 @@
       </template>
       <template #top-right>
         <div class="flex items-center q-gutter-sm">
+          <q-input
+            dense
+            label="Filter Date"
+            hide-bottom-space
+            :model-value="
+              typeof pagination.filter_date == 'object'
+                ? `${pagination.filter_date?.from} - ${pagination?.filter_date.to}`
+                : pagination.filter_date
+            "
+          >
+            <template v-slot:prepend>
+              <q-icon name="event" class="cursor-pointer">
+                <q-popup-proxy
+                  cover
+                  transition-show="scale"
+                  transition-hide="scale"
+                >
+                  <q-date v-model="pagination.filter_date" range>
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup label="Close" color="primary" flat />
+                    </div>
+                  </q-date>
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+            <template v-slot:append>
+              <q-btn flat round size="sm" icon="mdi-close" @click.prevent="pagination.filter_date = ''"/>
+            </template>
+          </q-input>
           <q-input
             dense
             debounce="300"
@@ -353,7 +380,7 @@
 </template>
 <script setup>
 import { useGameScheduleStore } from "../stores/gameschedule.js";
-import { onBeforeMount, ref } from "vue";
+import { onMounted, onBeforeMount, ref, toRef, computed, watch } from "vue";
 import { useToast } from "vue-toastification";
 import { useServerPaginate } from "../composable/useServerPaginate";
 import { useFieldRules } from "../composable/useFieldRules";
@@ -410,6 +437,7 @@ const confirmDelete = ref(false);
 const addModal = ref(false);
 const updateModal = ref(false);
 const loading = ref(false);
+const scheduleTable = ref("");
 const { user } = useAuthStore();
 
 const gameType = [
@@ -429,6 +457,15 @@ const toast = useToast();
 const form = ref("");
 const saveForm = ref("");
 const schedules = ref([]);
+
+onMounted(() => {
+  watch(
+    () => pagination.value.filter_date,
+    (oldVal, newVal) => {
+      scheduleTable.value.requestServerInteraction();
+    }
+  );
+});
 
 const toggleCreateModal = () => (addModal.value = !addModal.value);
 

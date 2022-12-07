@@ -17,7 +17,8 @@ class DashboardController extends Controller
     public function getData()
     {
         $performanceCategory = PerformanceCategory::count();
-        $user = User::where('user_type', '<>', 'admin')->count();
+        $user = User::where('user_type', '<>', 'admin')->where('position', '<>', 'Assistant-Coach')->count();
+        $coach = User::where('user_type', '<>', 'admin')->where('position', 'Assistant-Coach')->count();
         $gameschedule = GameSchedule::count();
         $evaluation = Evaluation::count();
         $drills = GameDrill::count();
@@ -25,6 +26,7 @@ class DashboardController extends Controller
         return $this->data([
             'performanceCategory' => $performanceCategory,
             'user' => $user,
+            'coach' => $coach,
             'gameSchedule' => $gameschedule,
             'evaluation' => $evaluation,
             'drills' => $drills,

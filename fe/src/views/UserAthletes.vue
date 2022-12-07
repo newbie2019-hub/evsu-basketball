@@ -28,7 +28,6 @@
       <template #top-right>
         <div class="flex items-center q-gutter-sm">
           <q-select
-
             dense
             v-model="pagination.filter_by_team"
             use-input
@@ -649,7 +648,6 @@ onBeforeMount(async () => {
 
 const filterAthleteTeam = () => {
   athleteTable.value.requestServerInteraction()
-  console.log(athleteTable.value)
 }
 
 const filterFn = (val, update) => {
