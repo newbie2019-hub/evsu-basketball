@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             DefaultAccountSeeder::class,
             AthleteSeeder::class,
+            AssistantCoachSeeder::class,
             DrillCategorySeeder::class,
             GameDrillSeeder::class,
             GameScheduleSeeder::class,

@@ -10,7 +10,7 @@ Player
  - View Data
  - Account Settings
 
-Game Rating
+Game Rating [x]
 EFF
  - Shooting
  - 
@@ -19,22 +19,27 @@ Bugs
  - Evaluation Update
 
 Head Coach [x]
- - Assign assistant coach
-   -> Assign players
+ - Create assistant coach acc
+   -> Assign players 
    -> Assign Prio Drills for Individual Players
  -
 
-Types of Coach
- Dynamic Categories
-   Strength   
-
-
 Teams
- - Add Teams (Select Athletes)
+ - Add Teams (Select Athletes)[x]
 
 Athlete
- - Dropdown <Select> Team (Filter)
+ - Dropdown <Select> Team (Filter) [x]
 
 Evaluation 
  - Add Legends 
 
+Create Timer for Drills - Can Start Timer
+
+Assign Player to assistant coach
+CoachPlayer - Model
+ - id
+ - coach_id
+ - athlete_id
+
+Assign Drills to Players by Assistant Coach
+PlayerDrills - Model

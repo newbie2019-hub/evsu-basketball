@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AthleteRequest extends FormRequest
+class AssistantCoachRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,11 +23,11 @@ class AthleteRequest extends FormRequest
      */
     public function rules()
     {
-        if(request()->routeIs('athletes.store')) {
+        if(request()->routeIs('coaches.store')) {
             return $this->saveRules();
         }
 
-        if(request()->routeIs('athletes.update')) {
+        if(request()->routeIs('coaches.update')) {
             return $this->updateRules();
         }
     }

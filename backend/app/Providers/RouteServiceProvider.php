@@ -49,6 +49,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('drill', GameDrill::class);
         Route::model('performance', PerformanceEvaluation::class);
         Route::model('statistic', PlayerPerformance::class);
+        Route::model('coach', User::class);
     }
 
     /**

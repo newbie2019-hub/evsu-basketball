@@ -18,6 +18,12 @@ export const links = [
     icon: 'mdi-account-group'
   },
   {
+    name: 'Coaches',
+    to: 'coaches',
+    user_type: 'admin',
+    icon: 'mdi-account-tie'
+  },
+  {
     name: 'Schedules',
     to: 'schedules',
     user_type: 'user',

@@ -14,7 +14,7 @@
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
 import moment from "moment";
-import { watchEffect, onMounted, ref, computed } from "vue";
+import { computed } from "vue";
 
 const emits = defineEmits(["emitEvent"]);
 
@@ -25,15 +25,10 @@ const props = defineProps({
   },
 });
 
-// const events = ref([]);
-
 const onEventClick = (event, e) => {
   emits("emitEvent", event);
   e.stopPropagation();
 };
-console.log(props.data);
-
-// onMounted(() => {
 
 const events = computed(() => {
   let sched = [];
@@ -51,5 +46,4 @@ const events = computed(() => {
   return sched;
 });
 
-// });
 </script>

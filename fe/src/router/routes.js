@@ -23,6 +23,11 @@ const routes = [
         component: () => import("../views/GameTeams.vue"),
       },
       {
+        path: "coaches",
+        name: "Coaches",
+        component: () => import("../views/AssistantCoach.vue"),
+      },
+      {
         path: "player-evaluation",
         name: "Player Evaluation",
         component: () => import("../views/PlayerEvaluation.vue"),
