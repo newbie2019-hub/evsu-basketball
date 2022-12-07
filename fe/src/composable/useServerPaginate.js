@@ -12,7 +12,8 @@ export function useServerPaginate() {
     descending: false,
     sortBy: 'asc',
     search: '',
-    filter: false
+    filter: false,
+    filter_by_team: '',
   });
 
   return { pagination }

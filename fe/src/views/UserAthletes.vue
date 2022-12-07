@@ -2,6 +2,7 @@
   <div class="q-my-md">
     <q-table
       flat
+      ref="athleteTable"
       class="my-sticky-column-table"
       :rows="athleteStore.athletes.data"
       :columns="columns"
@@ -13,11 +14,49 @@
     >
       <template #top-left>
         <div>
-          <q-btn @click.prevent="addModal = true" flat icon="mdi-account-circle-outline" color="primary" unelevated label="Add Athlete" style="font-size: .85rem" />
+          <q-btn
+            @click.prevent="addModal = true"
+            flat
+            icon="mdi-account-circle-outline"
+            color="primary"
+            unelevated
+            label="Add Athlete"
+            style="font-size: 0.85rem"
+          />
         </div>
       </template>
       <template #top-right>
         <div class="flex items-center q-gutter-sm">
+          <q-select
+
+            dense
+            v-model="pagination.filter_by_team"
+            use-input
+            input-debounce="300"
+            label="Filter Team"
+            :options="allTeams"
+            option-value="id"
+            :option-label="(item) => item.team"
+            @filter="filterFn"
+            emit-value
+            map-options
+            @update:model-value="filterAthleteTeam"
+          >
+            <template v-slot:append>
+              <q-icon
+                size="16px"
+                v-if="pagination.filter_by_team == ''"
+                class="cursor-pointer"
+                name="clear"
+                @click.stop.prevent="pagination.filter_by_team = null"
+              />
+            </template>
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey"> No results </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
           <q-input
             dense
             debounce="300"
@@ -56,6 +95,17 @@
           >
             <q-btn
               @click.prevent="
+                viewModal = true;
+                selectedAthlete = JSON.parse(JSON.stringify(props.row));
+              "
+              flat
+              size="10px"
+              round
+              color="grey-7"
+              icon="mdi-eye"
+            />
+            <q-btn
+              @click.prevent="
                 updateModal = true;
                 selectedAthlete = JSON.parse(JSON.stringify(props.row));
               "
@@ -81,6 +131,74 @@
       </template>
     </q-table>
   </div>
+
+  <q-dialog v-model="viewModal" persistent>
+    <q-card style="min-width: 320px; max-width: 380px">
+      <q-card-section class="">
+        <div class="column items-center justify-center">
+          <q-avatar size="80px" class="cursor-pointer q-mt-md">
+            <img
+              v-if="selectedAthlete?.photo && selectedAthlete?.photo !== 'null'"
+              :src="`http://127.0.0.1:8000/images/profile/${selectedAthlete?.photo}`"
+            />
+            <img :src="`https://robohash.org/${selectedAthlete?.id}`" />
+          </q-avatar>
+          <p
+            class="q-mb-none q-mt-sm text-weight-medium"
+            style="font-size: 1.1rem"
+          >
+            {{ selectedAthlete?.first_name }} {{ selectedAthlete?.last_name }}
+          </p>
+          <p class="text-caption ellipsis">{{ selectedAthlete?.email }}</p>
+        </div>
+        <div class="row">
+          <div class="col">
+            <p class="q-mb-none">
+              <span class="text-weight-bold">Gender:</span>
+              {{ selectedAthlete?.gender }}
+            </p>
+            <p class="q-mb-none">
+              <span class="text-weight-bold">Address:</span>
+              {{ selectedAthlete?.address }}
+            </p>
+            <p class="q-mb-none">
+              <span class="text-weight-bold">Course:</span>
+              {{ selectedAthlete?.course ?? "N/A" }}
+            </p>
+          </div>
+          <div class="col">
+            <p class="q-mb-none">
+              <span class="text-weight-bold">Height:</span>
+              {{ selectedAthlete?.height }} cm
+            </p>
+            <p class="q-mb-none">
+              <span class="text-weight-bold">Weight:</span>
+              {{ selectedAthlete?.weight }} kg
+            </p>
+            <p class="q-mb-none">
+              <span class="text-weight-bold">Contact:</span>
+              {{ selectedAthlete?.contact ?? "N/A" }}
+            </p>
+            <p class="q-mb-none">
+              <span class="text-weight-bold">Year:</span>
+              {{ selectedAthlete?.year ?? "N/A" }}
+            </p>
+          </div>
+        </div>
+      </q-card-section>
+
+      <q-card-actions align="right">
+        <q-btn
+          flat
+          label="Close"
+          color="primary"
+          v-close-popup
+          style="font-size: 0.8rem"
+          :disable="isBtnLoading"
+        />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
 
   <q-dialog v-model="confirmDelete" persistent>
     <q-card style="max-width: 380px">
@@ -125,7 +243,10 @@
           Please fill-in all the fields for the athlete's data
         </p>
       </q-card-section>
-      <q-card-section class="q-pt-none" style="max-height: 400px">
+      <q-card-section
+        class="q-pt-none"
+        style="max-height: 400px; overflow-y: auto"
+      >
         <q-form ref="form" @submit="updateAthlete" class="q-mt-md">
           <q-input
             outlined
@@ -163,6 +284,29 @@
             v-model="selectedAthlete.last_name"
             label="Last Name"
           />
+          <div class="row q-gutter-sm">
+            <div class="col">
+              <q-input
+                outlined
+                :rules="[required, minLength]"
+                hide-bottom-space
+                class="q-mt-sm"
+                dense
+                v-model="selectedAthlete.height"
+                label="Height (cm)"
+              />
+            </div>
+            <div class="col">
+              <q-input
+                outlined
+                hide-bottom-space
+                class="q-mt-sm"
+                dense
+                v-model="selectedAthlete.weight"
+                label="Weight (kg)"
+              />
+            </div>
+          </div>
           <q-select
             outlined
             :rules="[required, minLength]"
@@ -236,7 +380,10 @@
           Please fill-in all the fields for the athlete's data
         </p>
       </q-card-section>
-      <q-card-section class="q-pt-none" style="max-height: 400px">
+      <q-card-section
+        class="q-pt-none"
+        style="max-height: 400px; overflow-y: auto"
+      >
         <q-form ref="saveForm" @submit="saveAthlete" class="q-mt-md">
           <q-input
             outlined
@@ -273,6 +420,34 @@
             v-model="userData.last_name"
             label="Last Name"
           />
+          <div class="row q-gutter-sm">
+            <div class="col">
+              <q-input
+                outlined
+                type="number"
+                step="any"
+                :rules="[required, minLength]"
+                hide-bottom-space
+                class="q-mt-sm"
+                dense
+                v-model="userData.height"
+                label="Height (cm)"
+              />
+            </div>
+            <div class="col">
+              <q-input
+                outlined
+                type="number"
+                step="any"
+                :rules="[required]"
+                hide-bottom-space
+                class="q-mt-sm"
+                dense
+                v-model="userData.weight"
+                label="Weight (kg)"
+              />
+            </div>
+          </div>
           <q-select
             outlined
             :rules="[required, minLength]"
@@ -338,10 +513,11 @@
 </template>
 <script setup>
 import { useAthleteStore } from "../stores/athletes.js";
-import { onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref, toRef, watch } from "vue";
 import { useToast } from "vue-toastification";
 import { useServerPaginate } from "../composable/useServerPaginate";
 import { useFieldRules } from "../composable/useFieldRules";
+import { useTeamStore } from "src/stores/teams";
 
 const columns = [
   {
@@ -359,24 +535,34 @@ const columns = [
     sortable: false,
   },
   {
+    name: "team",
+    label: "Team",
+    align: "left",
+    field: (row) => {
+      console.log(row?.team?.team?.team);
+      return row?.team?.team?.team ?? "No Team";
+    },
+    sortable: false,
+  },
+  {
     name: "height",
     label: "Height",
     align: "left",
-    field: (row) => row.height + 'cm',
+    field: (row) => row.height + "cm",
     sortable: false,
   },
   {
     name: "weight",
     label: "Weight",
     align: "left",
-    field: (row) => row.weight + 'kg',
+    field: (row) => row.weight + "kg",
     sortable: false,
   },
   {
     name: "contact",
     label: "Contact Number",
     align: "left",
-    field: (row) => row.contact ?? 'No Data',
+    field: (row) => row.contact ?? "No Data",
     sortable: false,
   },
   {
@@ -394,13 +580,6 @@ const columns = [
     sortable: false,
   },
   {
-    name: "address",
-    label: "Address",
-    align: "left",
-    field: (row) => row.address,
-    sortable: false,
-  },
-  {
     name: "created_on",
     label: "Created On",
     align: "left",
@@ -415,12 +594,23 @@ const columns = [
   },
 ];
 
-const userData = ref({ position: "", first_name: "", last_name: "", address: '', email: '', contact: '' });
+const userData = ref({
+  position: "",
+  first_name: "",
+  last_name: "",
+  address: "",
+  email: "",
+  contact: "",
+});
+
+let { teamsOption } = useTeamStore();
 const selectedAthlete = ref({});
 const confirmDelete = ref(false);
 const addModal = ref(false);
 const updateModal = ref(false);
 const loading = ref(false);
+const viewModal = ref(false);
+const allTeams = ref([]);
 
 const genderOptions = ["Male", "Female"];
 const posOptions = [
@@ -439,9 +629,9 @@ const isBtnLoading = ref(false);
 const toast = useToast();
 const form = ref("");
 const saveForm = ref("");
+const athleteTable = ref('')
 
-const toggleCreateModal = () =>
-  (addModal.value = !addModal.value);
+const toggleCreateModal = () => (addModal.value = !addModal.value);
 
 const toggleDeleteModal = () => (confirmDelete.value = !confirmDelete.value);
 
@@ -451,19 +641,36 @@ const submitForm = async () => {
 
 const submitSaveForm = async () => {
   await saveForm.value.submit();
-}
+};
 
 onBeforeMount(async () => {
   await getData();
 });
 
+const filterAthleteTeam = () => {
+  athleteTable.value.requestServerInteraction()
+  console.log(athleteTable.value)
+}
+
+const filterFn = (val, update) => {
+  if (val === "") {
+    update(async () => {
+      return ["Search"];
+    });
+  }
+
+  update(async () => {
+    const { data } = await teamsOption(val);
+    allTeams.value = data;
+  });
+};
+
 const getData = async (props) => {
   loading.value = true;
-  console.log('Props Data: ', props)
 
   const initialPage = props ?? 1;
-  pagination.value.sortBy = props?.pagination?.sortBy
-  pagination.value.descending = props?.pagination?.descending
+  pagination.value.sortBy = props?.pagination?.sortBy;
+  pagination.value.descending = props?.pagination?.descending;
   pagination.value.rowsPerPage = props?.pagination?.rowsPerPage ?? 10;
 
   const { status, data } = await athleteStore.get(initialPage);

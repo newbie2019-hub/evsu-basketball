@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh LpR fFf" class="q-px-md">
-    <q-header class="bg-white text-black" bordered="">
+    <q-header class="bg-red-8 text-white" bordered="">
       <q-toolbar>
         <q-btn dense flat round icon="mdi-menu" @click="toggleLeftDrawer" />
 
@@ -28,7 +28,7 @@
                 <p class="q-mb-none q-mt-sm">
                   {{ user.first_name }} {{ user.last_name }}
                 </p>
-                <p class="text-caption ellipsis">{{ user.email }}</p>
+                <p class="text-caption ellipsis" >{{ user.email }}</p>
               </div>
               <q-list style="min-width: 150px">
                 <q-item clickable v-close-popup to="/settings">
@@ -58,6 +58,8 @@
       :overlay="screen.lt.sm"
       @mouseover="miniState = false"
       @mouseout="miniState = true"
+      class=""
+
     >
       <q-scroll-area
         style="
@@ -101,7 +103,7 @@
             {{ user.first_name }} {{ user.last_name }}
           </div>
           <div>
-            <p class="text-caption q-mb-none">{{ user.email }}</p>
+            <p class="text-caption ellipsis q-mb-none">{{ user.email }}</p>
           </div>
         </div>
       </q-img>

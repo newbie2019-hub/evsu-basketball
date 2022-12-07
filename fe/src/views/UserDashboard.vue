@@ -56,6 +56,23 @@
           <q-btn to="/evaluations" flat>View All</q-btn>
         </q-card-actions>
       </q-card>
+      <q-card unelevated class="my-card">
+        <q-card-section class="card-body">
+          <p class="q-mb-none text-weight-medium" style="font-size: 1rem">
+            Total Drills
+          </p>
+          <p class="q-mb-none q-mt-sm">
+            There are currently
+            <span class="q-mb-none text-weight-bold" style="font-size: 0.8rem"
+              >{{( dashboardStore.dashboard?.drills ?? '00' )}}</span
+            >
+            game drills added on your records.
+          </p>
+        </q-card-section>
+        <q-card-actions class="card-actions">
+          <q-btn to="/drills" flat>View All</q-btn>
+        </q-card-actions>
+      </q-card>
     </div>
   </div>
 </template>

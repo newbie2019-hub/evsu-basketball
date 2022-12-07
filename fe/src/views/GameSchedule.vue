@@ -61,7 +61,7 @@
           </div>
         </div>
       </template>
-      <template #body-cell-actions="props">
+      <template #body-cell-actions="props" v-if="user?.user_type == 'admin'">
         <q-td :props="props">
           <div
             class="flex no-wrap q-gutter-sm items-center"

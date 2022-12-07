@@ -5,6 +5,10 @@ import { reactive } from "vue";
 export const useAuthStore = defineStore("userStore", () => {
   let user = reactive({ id: null, first_name: null, last_name: null, user_type: '', value: { user_type: '' } });
 
+  const userData = JSON.parse(localStorage.getItem('user_data'))
+
+  user = userData || user
+
   function login(data) {
     return api.post("login", data);
   }

@@ -2,9 +2,8 @@ import { defineStore } from "pinia";
 import api from "../boot/axios";
 import { ref, computed } from "vue";
 
-export const useTeamStore = defineStore("teamStore", () => {
-  let teams = ref([]);
-  let allTeams = ref([])
+export const useStatisticsStore = defineStore("statisticsStore", () => {
+  let statistics = ref([]);
 
   function get(page) {
     const prop = typeof page === "object";
@@ -15,34 +14,27 @@ export const useTeamStore = defineStore("teamStore", () => {
     const perPage = prop ? page.pagination.rowsPerPage : 10;
 
     return api.get(
-      `teams?page=${p}&search=${search}&per_page=${perPage}&sortBy=${sortBy}&descending=${descending}`
+      `statistics?page=${p}&search=${search}&per_page=${perPage}&sortBy=${sortBy}&descending=${descending}`
     );
   }
 
-  function teamsOption(search) {
-    return api.get(`getTeams?filter_by_team=${search}`);
-  }
-
-  function deleteTeam(data) {
-    return api.delete(`teams/${data}`);
+  function deleteStatistics(data) {
+    return api.delete(`statistics/${data}`);
   }
 
   function update(data) {
-    console.log("Passed Data: ", data);
-    return api.put(`teams/${data.id}`, data);
+    return api.put(`statistics/${data.id}`, data);
   }
 
   function create(data) {
-    return api.post("teams", data);
+    return api.post("statistics", data);
   }
 
   return {
-    teams,
+    statistics,
     get,
-    deleteTeam,
+    deleteStatistics,
     update,
     create,
-    teamsOption,
-    allTeams,
   };
 });

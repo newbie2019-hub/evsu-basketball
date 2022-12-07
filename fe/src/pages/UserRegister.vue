@@ -1,5 +1,5 @@
 <template>
-  <div class="row justify-center items-center window-height">
+  <div class="row justify-center items-center window-height bg-hero">
     <div class="col-11 col-xs-7 col-sm-6 col-md-6 col-lg-5">
       <q-card>
         <q-card-section style="padding: 2.4rem 2rem">

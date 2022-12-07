@@ -24,9 +24,15 @@ export const links = [
     icon: 'mdi-calendar'
   },
   {
+    name: 'Player Statistics',
+    to: 'statistics',
+    user_type: 'admin',
+    icon: 'mdi-chart-timeline-variant'
+  },
+  {
     name: 'Evaluations',
     to: 'evaluations',
-    user_type: 'user',
+    user_type: 'admin',
     icon: 'mdi-file-edit-outline'
   },
   {

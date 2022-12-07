@@ -1,12 +1,17 @@
 <template>
-  <div class="row justify-center items-center window-height">
+  <div class="row justify-center items-center window-height bg-hero">
     <div class="col-11 col-xs-7 col-sm-5 col-md-3">
       <q-card>
         <q-card-section style="padding: 2.4rem 2rem">
-          <p class="text-weight-medium q-mb-none" style="font-size: 1.4rem">
-            Login Account
-          </p>
-          <p>Please enter your credentials to proceed</p>
+          <div class="flex items-center justify-center">
+            <img src="../assets/images/eagles_logo.png" alt="" height="60" />
+            <div class="text-center q-mt-md">
+              <p class="text-weight-medium q-mb-none" style="font-size: 1.4rem">
+                Login Account
+              </p>
+              <p>Please enter your credentials to proceed</p>
+            </div>
+          </div>
           <q-form @submit="loginAccount" class="q-gutter-md">
             <q-input
               hide-bottom-space
@@ -55,7 +60,9 @@
             <q-separator class="q-mt-md block"></q-separator>
             <p class="text-center">
               Dont have an account?
-              <router-link to="/register" style="text-decoration: none;">Sign-up</router-link>
+              <router-link to="/register" style="text-decoration: none"
+                >Sign-up</router-link
+              >
             </p>
           </q-form>
         </q-card-section>
@@ -93,3 +100,18 @@ const loginAccount = async () => {
   isLoading.value = false;
 };
 </script>
+
+<style>
+.bg-hero {
+  background-image: linear-gradient(
+      to right,
+      rgba(13, 2, 2, 0.847),
+      rgba(138, 31, 31, 0.838)
+    ),
+    url("../assets/images/bg-hero.jpg");
+  width: 100%;
+  position: fixed;
+  background-position: fixed;
+  background-size: cover;
+}
+</style>

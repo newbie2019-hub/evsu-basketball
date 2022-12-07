@@ -12,7 +12,7 @@
                 >
               </q-item-section>
             </q-item>
-            <q-item clickable v-ripple :active="!personalSettings" @click.prevent="personalSettings = false">
+            <q-item v-if="user?.user_type == 'admin'" clickable v-ripple :active="!personalSettings" @click.prevent="personalSettings = false">
               <q-item-section>
                 <q-item-label>Account Registration</q-item-label>
                 <q-item-label caption>Year, Course</q-item-label>
@@ -35,7 +35,9 @@ import AccountSettings from './Settings/AccountSettings.vue'
 import AccountRegistration from './Settings/AccountRegistration.vue'
 import { useQuasar } from 'quasar';
 import { ref } from 'vue'
+import { useAuthStore } from 'src/stores/authentication';
 
+const { user } = useAuthStore()
 const personalSettings = ref(true)
 const { screen } = useQuasar()
 </script>
