@@ -199,7 +199,7 @@
     <q-card style="max-width: 400px">
       <q-card-section class="q-pb-none">
         <p class="q-mb-none text-weight-medium" style="font-size: 1.1rem">
-          Update Athlete
+          Update Data
         </p>
         <p class="q-mb-none">
           Please fill-in all the fields for the athlete's data
