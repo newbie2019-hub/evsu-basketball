@@ -28,7 +28,7 @@ class UserFactory extends Factory
             'height' => fake()->numberBetween(160, 200),
             'weight' => fake()->numberBetween(50, 200),
             'user_type' => 'user',
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'password' => 'password', // password
             'remember_token' => Str::random(10),
         ];
     }

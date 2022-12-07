@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Evaluation;
+use App\Models\GameDrill;
 use App\Models\GameSchedule;
 use App\Models\PerformanceCategory;
 use App\Models\User;
@@ -19,7 +20,14 @@ class DashboardController extends Controller
         $user = User::where('user_type', '<>', 'admin')->count();
         $gameschedule = GameSchedule::count();
         $evaluation = Evaluation::count();
+        $drills = GameDrill::count();
 
-        return $this->data(['performanceCategory' => $performanceCategory, 'user' => $user, 'gameSchedule' => $gameschedule, 'evaluation' => $evaluation]);
+        return $this->data([
+            'performanceCategory' => $performanceCategory,
+            'user' => $user,
+            'gameSchedule' => $gameschedule,
+            'evaluation' => $evaluation,
+            'drills' => $drills,
+        ]);
     }
 }
