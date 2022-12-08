@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AssistantCoachController;
+use App\Http\Controllers\AthleteCoachController;
 use App\Http\Controllers\AthletesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -54,6 +55,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResource('athletes', AthletesController::class);
 
     Route::get('getCoaches', [AssistantCoachController::class, 'getCoaches']);
+    Route::apiResource('coaches/assign', AthleteCoachController::class);
     Route::apiResource('coaches', AssistantCoachController::class);
 
     Route::get('categories/all', [DrillCategoryController::class, 'all']);

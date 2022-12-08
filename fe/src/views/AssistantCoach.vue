@@ -65,6 +65,18 @@
           >
             <q-btn
               @click.prevent="
+                assignCoachPlayers(JSON.parse(JSON.stringify(props.row)))
+              "
+              flat
+              size="10px"
+              round
+              color="grey-7"
+              icon="mdi-clipboard-account"
+            >
+              <q-tooltip> Assign Players </q-tooltip>
+            </q-btn>
+            <q-btn
+              @click.prevent="
                 viewModal = true;
                 selectedCoach = JSON.parse(JSON.stringify(props.row));
               "
@@ -73,7 +85,9 @@
               round
               color="grey-7"
               icon="mdi-eye"
-            />
+            >
+              <q-tooltip> View Details </q-tooltip>
+            </q-btn>
             <q-btn
               @click.prevent="
                 updateModal = true;
@@ -84,7 +98,9 @@
               round
               color="grey-7"
               icon="mdi-pencil-outline"
-            />
+            >
+              <q-tooltip> Update </q-tooltip>
+            </q-btn>
             <q-btn
               @click.prevent="
                 confirmDelete = true;
@@ -95,7 +111,9 @@
               round
               color="grey-7"
               icon="mdi-trash-can-outline"
-            />
+            >
+              <q-tooltip> Delete </q-tooltip>
+            </q-btn>
           </div>
         </q-td>
       </template>
@@ -162,6 +180,60 @@
     </q-card>
   </q-dialog>
 
+  <q-dialog v-model="assignPlayers" persistent>
+    <q-card style="max-width: 380px">
+      <q-card-section class="">
+        <p class="q-mb-none text-weight-medium" style="font-size: 1.1rem">
+          Assign Players
+        </p>
+        <p class="q-mb-none q-mt-sm">
+          Select multiple athletes to be assigned to this coach
+        </p>
+        <q-select
+          class="q-mt-md"
+          outlined
+          dense
+          v-model="selectedCoach.user_id"
+          use-input
+          input-debounce="300"
+          label="Select Athletes"
+          :options="athletes"
+          option-value="id"
+          :option-label="(item) => item.first_name + ' ' + item.last_name"
+          @filter="filterFn"
+          emit-value
+          map-options
+          multiple
+        >
+          <template v-slot:no-option>
+            <q-item>
+              <q-item-section class="text-grey"> No results </q-item-section>
+            </q-item>
+          </template>
+        </q-select>
+      </q-card-section>
+
+      <q-card-actions align="right">
+        <q-btn
+          flat
+          label="Cancel"
+          color="primary"
+          v-close-popup
+          style="font-size: 0.8rem"
+          :disable="isBtnLoading"
+        />
+        <q-btn
+          @click.prevent="savePlayerAssignment"
+          flat
+          label="Assign"
+          color="green"
+          style="font-size: 0.8rem"
+          :loading="isBtnLoading"
+        />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+
   <q-dialog v-model="confirmDelete" persistent>
     <q-card style="max-width: 380px">
       <q-card-section class="">
@@ -169,8 +241,8 @@
           Confirm Delete
         </p>
         <p class="q-mb-none q-mt-sm">
-          Are you sure you want to delete this assistant coach? All records for this
-          coach will be deleted as well.
+          Are you sure you want to delete this assistant coach? All records for
+          this coach will be deleted as well.
         </p>
       </q-card-section>
 
@@ -471,6 +543,7 @@ import { onBeforeMount, ref, watch } from "vue";
 import { useToast } from "vue-toastification";
 import { useServerPaginate } from "../composable/useServerPaginate";
 import { useFieldRules } from "../composable/useFieldRules";
+import { useAthleteStore } from "../stores/athletes";
 
 const columns = [
   {
@@ -552,11 +625,11 @@ const addModal = ref(false);
 const updateModal = ref(false);
 const loading = ref(false);
 const viewModal = ref(false);
+const assignPlayers = ref(false);
+const athletes = ref([]);
 
 const genderOptions = ["Male", "Female"];
-const posOptions = [
-  "Assistant-Coach",
-];
+const posOptions = ["Assistant-Coach"];
 
 let { pagination } = useServerPaginate();
 const { required, minLength, contactNumber } = useFieldRules();
@@ -567,6 +640,7 @@ const toast = useToast();
 const form = ref("");
 const saveForm = ref("");
 const athleteTable = ref("");
+const { athleteOptions } = useAthleteStore();
 
 const toggleCreateModal = () => (addModal.value = !addModal.value);
 
@@ -584,6 +658,31 @@ onBeforeMount(async () => {
   await getData();
 });
 
+const assignCoachPlayers = async(data) => {
+  assignPlayers.value = true
+  selectedCoach.value = data
+  selectedCoach.value.user_id = [];
+
+  selectedCoach.value.players.map((player) => {
+    selectedCoach.value.user_id.push(player.athlete_id)
+  })
+
+}
+
+const savePlayerAssignment = async () => {
+  loading.value = true
+
+  const { status, data } = await coachStore.assign(selectedCoach.value);
+
+  if (status == 200) {
+    toast.success(data.msg)
+    assignPlayers.value = false
+    await getData();
+  }
+
+  loading.value = false;
+
+};
 
 const getData = async (props) => {
   loading.value = true;
@@ -639,9 +738,7 @@ const updateCoach = async () => {
 
 const deleteCoach = async () => {
   isBtnLoading.value = true;
-  const { data, status } = await coachStore.deleteCoach(
-    selectedCoach.value.id
-  );
+  const { data, status } = await coachStore.deleteCoach(selectedCoach.value.id);
 
   if (status === 200) {
     toast.success(data.msg);
@@ -650,6 +747,19 @@ const deleteCoach = async () => {
 
   isBtnLoading.value = false;
   toggleDeleteModal();
+};
+
+const filterFn = (val, update) => {
+  if (val === "") {
+    update(async () => {
+      return ["Search"];
+    });
+  }
+
+  update(async () => {
+    const { data } = await athleteOptions(val);
+    athletes.value = data;
+  });
 };
 </script>
 

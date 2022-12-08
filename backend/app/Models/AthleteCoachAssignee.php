@@ -16,4 +16,14 @@ class AthleteCoachAssignee extends Model
         return $date->format('F j, Y h:i A');
     }
 
+    public function athlete()
+    {
+        return $this->belongsTo(User::class, 'athlete_id', 'id');
+    }
+
+    public function coach()
+    {
+        return $this->belongsTo(User::class, 'coach_id', 'id');
+    }
+
 }

@@ -33,5 +33,9 @@ export const useCoachStore = defineStore("coachStore", () => {
     return api.post("coaches", data);
   }
 
-  return { coaches, get, deleteCoach, update, create, coachOptions };
+  function assign(data) {
+    return api.post("coaches/assign", data);
+  }
+
+  return { coaches, get, deleteCoach, update, create, coachOptions, assign };
 });

@@ -76,4 +76,14 @@ class User extends Authenticatable
             set: fn($value) => Hash::make($value)
         );
     }
+
+    public function players()
+    {
+        return $this->hasMany(AthleteCoachAssignee::class, 'coach_id', 'id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'athlete_id', 'id');
+    }
 }

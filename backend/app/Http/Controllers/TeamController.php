@@ -15,7 +15,7 @@ class TeamController extends Controller
     public function index(Request $request)
     {
 
-        $teams = Team::with('players')->withCount('players')->when($request->search, fn ($query, $search)
+        $teams = Team::with('players.user')->withCount('players')->when($request->search, fn ($query, $search)
             => $query->where('team', 'like', '%' . $search . '%')
             ->orWhereRelation('user', 'first_name', 'like', '%'. $search .'%')
             ->orWhereRelation('user', 'last_name', 'like', '%'. $search .'%'))

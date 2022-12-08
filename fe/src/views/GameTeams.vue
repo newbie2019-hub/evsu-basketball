@@ -56,6 +56,15 @@
           </div>
         </div>
       </template>
+      <template #body-cell-players="props">
+        <q-td :props="props">
+          <div class="flex">
+            <p class="q-mb-none" v-for="player in props.row.players" :key="player.id">
+              {{player.user.last_name}}, &nbsp;
+            </p>
+          </div>
+        </q-td>
+      </template>
       <template #body-cell-actions="props">
         <q-td :props="props">
           <div
@@ -288,6 +297,12 @@ const columns = [
     label: "Team",
     align: "left",
     field: (row) => row.team,
+    sortable: false,
+  },
+  {
+    name: "players",
+    label: "Players",
+    align: "left",
     sortable: false,
   },
   {

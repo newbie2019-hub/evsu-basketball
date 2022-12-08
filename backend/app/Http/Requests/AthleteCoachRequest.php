@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class EvaluationRequest extends FormRequest
+class AthleteCoachRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,8 @@ class EvaluationRequest extends FormRequest
     public function rules()
     {
         return [
-            'evaluation' => 'required'
+            'id' => 'required|exists:users,id',
+            'user_id' => 'required|array',
         ];
     }
 }

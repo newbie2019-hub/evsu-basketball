@@ -13,7 +13,7 @@ class AssistantCoachController extends Controller
 
     public function index(Request $request)
     {
-        $coach = User::where('user_type', '<>', 'admin')
+        $coach = User::with('players.athlete')->where('user_type', '<>', 'admin')
             ->where('position', 'Assistant-Coach')
             ->where(function ($query) use ($request) {
                 $query->when($request->search, fn ($query, $search)
@@ -46,7 +46,6 @@ class AssistantCoachController extends Controller
 
     public function getCoaches(Request $request)
     {
-
         $coach = User::where('user_type', '<>', 'admin')
             ->where('position', 'Assistant-Coach')
             ->when($request->search, fn ($query, $search)
