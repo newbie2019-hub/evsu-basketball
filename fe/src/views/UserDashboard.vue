@@ -4,7 +4,7 @@
       Welcome to Dashboard
     </p>
     <p class="text-grey-7">Shown below are your summary of data</p>
-    <div class="row items-stretch">
+    <div class="row items-stretch q-pb-lg">
       <div class="col-sm-6 col-md-4 col-lg-3 q-mt-sm">
         <q-card unelevated class="my-card q-mr-sm q-mt-sm full-height">
           <q-card-section class="card-body">
@@ -91,18 +91,36 @@
         </q-card>
       </div>
     </div>
+    <div class="q-my-md q-mt-lg">
+      <p class="q-mb-none text-weight-bold" style="font-size: 1.2rem">
+        Event Schedules
+      </p>
+      <p class="text-grey-7">Shown on the calendar are your schedules</p>
+      <calendar-schedule :data="schedules" style="height: 400px" />
+    </div>
   </div>
 </template>
 <script setup>
 import { useDashboardStore } from "../stores/dashboard";
+import CalendarSchedule from "../components/CalendarSchedule.vue";
+import { useGameScheduleStore } from "../stores/gameschedule.js";
 import { ref, onMounted } from "vue";
 
 const dashboardStore = useDashboardStore();
+const gameScheduleStore = useGameScheduleStore();
+const schedules = ref([]);
 
 onMounted(async () => {
   const { status, data } = await dashboardStore.get();
   dashboardStore.dashboard = data;
+
+  await getSchedules();
 });
+
+const getSchedules = async () => {
+  const { data } = await gameScheduleStore.getSchedules();
+  schedules.value = data;
+};
 </script>
 <style>
 .card-actions {

@@ -21,7 +21,8 @@
     "vue": "^3.0.0",
     "vue-cal": "^4.8.1",
     "vue-router": "^4.0.0",
-    "vue-toastification": "^2.0.0-rc.5"
+    "vue-toastification": "^2.0.0-rc.5",
+    "vue3-apexcharts": "^1.4.1"
   },
   "devDependencies": {
     "@quasar/app-vite": "^1.0.0",

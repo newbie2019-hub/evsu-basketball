@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AthleteRequest;
+use App\Models\Evaluation;
+use App\Models\PerformanceEvaluation;
+use App\Models\PlayerPerformance;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Traits\ApiResponse;
@@ -42,7 +45,15 @@ class AthletesController extends Controller
     public function show(User $user)
     {
         $user->load(['team.team']);
-        return $this->data($user);
+        $pf = PlayerPerformance::where('user_id', $user->id)->get();
+
+        $evaluation = PerformanceEvaluation::where('user_id', $user->id)->get();
+
+        return $this->data([
+                'user' => $user,
+                'performance' => $pf,
+                'evaluation' => $evaluation
+               ]);
     }
 
     public function update(AthleteRequest $request, User $user)
@@ -63,7 +74,7 @@ class AthletesController extends Controller
 
         $athletes = User::where('user_type', '<>', 'admin')
             ->where('position', '<>', 'Assistant-Coach')
-            ->where(function ($query) use($request) {
+            ->where(function ($query) use ($request) {
                 $query->when($request->search, fn ($query, $search)
                 => $query->where('first_name', 'like', '%' . $search . '%')
                     ->orWhere('last_name', 'like', '%' . $search . '%')
