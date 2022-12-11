@@ -10,7 +10,7 @@
           </p></q-toolbar-title
         >
         <div class="q-pr-sm">
-          <q-avatar size="32px" class="cursor-pointer">
+          <q-avatar size="32px" class="bg-white cursor-pointer">
             <img
               v-if="user.photo && user.photo !== 'null'"
               :src="`http://127.0.0.1:8000/images/profile/${user.photo}`"
@@ -154,7 +154,7 @@ onBeforeMount(async () => {
 });
 
 const renderRoute = (r) => {
-  if(user.user_type === 'admin') {
+  if(user.user_type === 'admin' || (r.isSubCoach && user.position == 'Assistant-Coach')) {
     return true;
   }
 

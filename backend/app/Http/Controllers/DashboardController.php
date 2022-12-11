@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AthleteCoachAssignee;
 use App\Models\Evaluation;
 use App\Models\GameDrill;
 use App\Models\GameSchedule;
@@ -22,6 +23,7 @@ class DashboardController extends Controller
         $gameschedule = GameSchedule::count();
         $evaluation = Evaluation::count();
         $drills = GameDrill::count();
+        $assignedAthletes = AthleteCoachAssignee::where('coach_id', auth()->id())->count();
 
         return $this->data([
             'performanceCategory' => $performanceCategory,
@@ -30,6 +32,7 @@ class DashboardController extends Controller
             'gameSchedule' => $gameschedule,
             'evaluation' => $evaluation,
             'drills' => $drills,
+            'assignedAthletes' => $assignedAthletes,
         ]);
     }
 }

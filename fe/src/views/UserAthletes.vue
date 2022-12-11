@@ -23,6 +23,7 @@
             label="Add Athlete"
             style="font-size: 0.85rem"
           />
+          <q-toggle v-if="user.position == 'Assistant-Coach'" v-model="pagination.assignedPlayers" @update:model-value="filterAthleteTeam" true-value="Yes" false-value="" label="Assigned Players Only" />
         </div>
       </template>
       <template #top-right>
@@ -572,6 +573,7 @@
 </template>
 <script setup>
 import { useAthleteStore } from "../stores/athletes.js";
+import { useAuthStore } from "src/stores/authentication";
 import { onBeforeMount, ref, toRef, watch } from "vue";
 import { useToast } from "vue-toastification";
 import { useServerPaginate } from "../composable/useServerPaginate";
@@ -663,6 +665,7 @@ const userData = ref({
 });
 
 let { teamsOption } = useTeamStore();
+const { user } = useAuthStore()
 const selectedAthlete = ref({});
 const confirmDelete = ref(false);
 const addModal = ref(false);

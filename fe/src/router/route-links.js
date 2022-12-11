@@ -3,18 +3,21 @@ export const links = [
     name: 'Dashboard',
     to: '/dashboard',
     user_type: 'user',
+    isSubCoach: true,
     icon: 'mdi-chart-bubble'
   },
   {
     name: 'Athletes',
     to: '/athletes',
     user_type: 'admin',
+    isSubCoach: true,
     icon: 'mdi-account-circle'
   },
   {
     name: 'Teams',
     to: '/teams',
     user_type: 'admin',
+    isSubCoach: true,
     icon: 'mdi-account-group'
   },
   {
@@ -27,30 +30,35 @@ export const links = [
     name: 'Schedules',
     to: '/schedules',
     user_type: 'user',
+    isSubCoach: true,
     icon: 'mdi-calendar'
   },
   {
     name: 'Player Statistics',
     to: '/statistics',
     user_type: 'admin',
+    isSubCoach: true,
     icon: 'mdi-chart-timeline-variant'
   },
   {
     name: 'Evaluations',
     to: '/evaluations',
     user_type: 'admin',
+    isSubCoach: true,
     icon: 'mdi-file-edit-outline'
   },
   {
     name: 'Player Evaluation',
     to: '/player-evaluation',
     user_type: 'admin',
+    isSubCoach: true,
     icon: 'mdi-speedometer'
   },
   {
     name: 'Drills',
     to: '/drills',
     user_type: 'user',
+    isSubCoach: true,
     icon: 'mdi-basketball'
   },
   {

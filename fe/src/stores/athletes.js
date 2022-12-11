@@ -17,8 +17,9 @@ export const useAthleteStore = defineStore("athleteStore", () => {
     const descending = prop ? page.pagination.descending : ''
     const perPage = prop ? page.pagination.rowsPerPage : 10
     const filterByTeam = prop ? page.pagination.filter_by_team : '';
+    const assignedPlayers = prop ? page.pagination.assignedPlayers : '';
 
-    return api.get(`athletes?page=${p}&search=${search}&per_page=${perPage}&sortBy=${sortBy}&descending=${descending}&filter_by_team=${filterByTeam}`);
+    return api.get(`athletes?page=${p}&assignedPlayers=${assignedPlayers}&search=${search}&per_page=${perPage}&sortBy=${sortBy}&descending=${descending}&filter_by_team=${filterByTeam}`);
   }
 
   function athleteOptions(search){

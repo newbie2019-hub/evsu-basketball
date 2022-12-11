@@ -59,7 +59,7 @@
       </template>
       <template #body-cell-players="props">
         <q-td :props="props">
-          <div class="row text-no-wrap no-wrap">
+          <div class="row text-no-wrap no-wrap" v-if="props.row.players?.length != 0">
             <template
               v-for="(player, i) in props.row.players"
               :key="`player-id-${i}`"
@@ -72,6 +72,7 @@
               />
             </template>
           </div>
+          <p v-else class="text-grey-7">No Players Assigned</p>
         </q-td>
       </template>
       <template #body-cell-actions="props">

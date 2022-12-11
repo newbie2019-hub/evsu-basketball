@@ -14,7 +14,8 @@ export function useServerPaginate() {
     search: '',
     filter: false,
     filter_by_team: '',
-    filter_date: ''
+    filter_date: '',
+    assignedPlayers: ''
   });
 
   return { pagination }

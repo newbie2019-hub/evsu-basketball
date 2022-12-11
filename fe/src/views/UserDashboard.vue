@@ -5,6 +5,23 @@
     </p>
     <p class="text-grey-7">Shown below are your summary of data</p>
     <div class="row items-stretch q-pb-lg">
+      <div class="col-sm-6 col-md-4 col-lg-3 q-mt-sm" v-if="user.position == 'Assistant-Coach'">
+        <q-card unelevated class="my-card q-mr-sm q-mt-sm full-height">
+          <q-card-section class="card-body">
+            <p class="q-mb-none q-mt-sm">
+              <span class="q-mb-none text-weight-bold font-count">{{
+                dashboardStore.dashboard?.assignedAthletes ?? "00"
+              }}</span>
+            </p>
+            <p class="q-mb-none text-weight-medium" style="font-size: 1rem">
+              Assigned Athlete's
+            </p>
+          </q-card-section>
+          <q-card-actions class="card-actions">
+            <q-btn to="/athletes" flat>View All</q-btn>
+          </q-card-actions>
+        </q-card>
+      </div>
       <div class="col-sm-6 col-md-4 col-lg-3 q-mt-sm">
         <q-card unelevated class="my-card q-mr-sm q-mt-sm full-height">
           <q-card-section class="card-body">
@@ -101,6 +118,7 @@
   </div>
 </template>
 <script setup>
+import { useAuthStore } from "src/stores/authentication";
 import { useDashboardStore } from "../stores/dashboard";
 import CalendarSchedule from "../components/CalendarSchedule.vue";
 import { useGameScheduleStore } from "../stores/gameschedule.js";
@@ -108,6 +126,7 @@ import { ref, onMounted } from "vue";
 
 const dashboardStore = useDashboardStore();
 const gameScheduleStore = useGameScheduleStore();
+const { user } = useAuthStore()
 const schedules = ref([]);
 
 onMounted(async () => {

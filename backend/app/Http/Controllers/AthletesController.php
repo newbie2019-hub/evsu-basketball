@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AthleteRequest;
+use App\Models\AthleteCoachAssignee;
 use App\Models\Evaluation;
 use App\Models\PerformanceEvaluation;
 use App\Models\PlayerPerformance;
@@ -18,9 +19,13 @@ class AthletesController extends Controller
     public function index(Request $request)
     {
         $teamQuery = $request->filter_by_team == 'null' ? '' : $request->filter_by_team;
+        $athletes = AthleteCoachAssignee::where('coach_id', auth()->id())->pluck('athlete_id')->toArray();
 
         $athletes = User::with('team.team')->where('user_type', '<>', 'admin')
             ->where('position', '<>', 'Assistant-Coach')
+            ->when($request->assignedPlayers, fn($query)
+                => $query->whereIn('id', $athletes)
+            )
             ->when(
                 $teamQuery,
                 fn ($query, $team)
