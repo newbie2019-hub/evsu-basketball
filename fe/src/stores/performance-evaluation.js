@@ -4,6 +4,11 @@ import { ref } from "vue";
 
 export const usePerfEvalStore = defineStore("perfEvalStore", () => {
   let performances = ref([]);
+  const athletePerformance = ref({});
+
+  function getPerformance(id) {
+    return api.get(`performances/${id}`)
+  }
 
   function get(page) {
     const prop = typeof page === 'object'
@@ -26,5 +31,5 @@ export const usePerfEvalStore = defineStore("perfEvalStore", () => {
     return api.post("performances", data);
   }
 
-  return { performances, get, deletePerformance, update, create };
+  return { athletePerformance, performances, get, getPerformance, deletePerformance, update, create };
 });

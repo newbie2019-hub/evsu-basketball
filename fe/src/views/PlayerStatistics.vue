@@ -19,10 +19,10 @@
       <template #top-left v-if="user?.user_type == 'admin'">
         <div>
           <q-btn
-            @click.prevent="addModal = true"
             flat
+            @click.prevent="addModal = true"
             icon="mdi-table-large-plus"
-            color="primary"
+            color="yellow-9"
             unelevated
             label="New Data"
             style="font-size: 0.85rem"
@@ -116,8 +116,8 @@
           Here are the calculated results based on the given data.
         </p>
         <div class="q-mt-sm">
-          <p class="q-mb-none">
-            Total Shot Attemps:
+          <p class="q-mb-none row justify-between">
+            <span>Total Shot Attemps:</span>
             {{
               totalShotAttempts(
                 selectedStatistics.free_throws_attempted,
@@ -126,8 +126,8 @@
               )
             }}
           </p>
-          <p class="q-mb-none">
-            Total Field Attempts (No Free Throws):
+          <p class="q-mb-none row justify-between">
+            <span>Total Field Attempts (No Free Throws):</span>
             {{
               totalFieldAttempts(
                 selectedStatistics.field_goals_attempted,
@@ -135,84 +135,100 @@
               )
             }}
           </p>
-          <p class="q-mb-none">
-            Free Throw Points Scored:
+          <p class="q-mb-none row justify-between">
+            <span>Free Throw Points Scored:</span>
             {{ selectedStatistics.three_pointers_made }}
           </p>
-          <p class="q-mb-none">
-            Field Goals Points Scored:
+          <p class="q-mb-none row justify-between">
+            <span>Field Goals Points Scored:</span>
             {{ parseInt(selectedStatistics.field_goals_made) * 2 }}
           </p>
-          <p class="q-mb-none">
-            Three Pointer Points Scored:
+          <p class="q-mb-none row justify-between">
+            <span>Three Pointer Points Scored:</span>
             {{ parseInt(selectedStatistics.three_pointers_made) * 3 }}
           </p>
-          <p class="q-mb-none">
-            Total Field Points Scored:
+          <p class="q-mb-none row justify-between">
+            <span>Total Field Points Scored:</span>
             {{
               parseInt(selectedStatistics.field_goals_made) +
               parseInt(selectedStatistics.three_pointers_made)
             }}
           </p>
-          <p class="q-mb-none">
-            Total Points Scored:
+          <p class="q-mb-none row justify-between">
+            <span>Total Points Scored:</span>
             {{
               parseInt(selectedStatistics.free_throws_made) +
               parseInt(selectedStatistics.field_goals_made) +
               parseInt(selectedStatistics.three_pointers_made)
             }}
           </p>
-          <p class="q-mb-none">
-            Free Throw Percentage:
+          <p class="q-mb-none row justify-between">
+            <span>Free Throw Percentage:</span>
 
             {{
-              ((parseInt(selectedStatistics.free_throws_made) /
-                parseInt(selectedStatistics.free_throws_attempted)) *
-              100).toFixed(2)
+              (
+                (parseInt(selectedStatistics.free_throws_made) /
+                  parseInt(selectedStatistics.free_throws_attempted)) *
+                100
+              ).toFixed(2)
             }}%
           </p>
-          <p class="q-mb-none">
-            Field Goal Percentage:
+          <p class="q-mb-none row justify-between">
+            <span>Field Goal Percentage:</span>
             {{
-              ((parseInt(selectedStatistics.field_goals_made) /
-              parseInt(selectedStatistics.field_goals_attempted) * 100)).toFixed(2)
+              (
+                (parseInt(selectedStatistics.field_goals_made) /
+                  parseInt(selectedStatistics.field_goals_attempted)) *
+                100
+              ).toFixed(2)
             }}%
           </p>
-          <p class="q-mb-none">
-            Three Pointer Percentage:
+          <p class="q-mb-none row justify-between">
+            <span>Three Pointer Percentage:</span>
             {{
-              ((parseInt(selectedStatistics.three_pointers_made) /
-                parseInt(selectedStatistics.three_pointers_attempted)) *
-              100).toFixed(2)
+              (
+                (parseInt(selectedStatistics.three_pointers_made) /
+                  parseInt(selectedStatistics.three_pointers_attempted)) *
+                100
+              ).toFixed(2)
             }}%
           </p>
-          <p class="q-mb-none">
-            Total Field Shooting Percentage:
+          <p class="q-mb-none row justify-between">
+            <span>Total Field Shooting Percentage:</span>
             {{
-              ((parseInt(selectedStatistics.field_goals_made) +
-                parseInt(selectedStatistics.three_pointers_made)) /
-                parseInt(selectedStatistics.field_goals_attempted) +
-              parseInt(selectedStatistics.three_pointers_attempted)).toFixed(2)
+              (
+                (parseInt(selectedStatistics.field_goals_made) +
+                  parseInt(selectedStatistics.three_pointers_made)) /
+                  parseInt(selectedStatistics.field_goals_attempted) +
+                parseInt(selectedStatistics.three_pointers_attempted)
+              ).toFixed(2)
             }}%
           </p>
-          <p class="q-mb-none">
-            Total Shooting Percentage:
+          <p class="q-mb-none row justify-between">
+            <span>Total Shooting Percentage:</span>
             {{
-              ((parseInt(selectedStatistics.free_throws_made) +
-                parseInt(selectedStatistics.field_goals_made) +
-                parseInt(selectedStatistics.three_pointers_made)) /
-                parseInt(selectedStatistics.free_throws_attempted) +
-              (parseInt(selectedStatistics.field_goals_attempted) +
-                parseInt(selectedStatistics.three_pointers_attempted))).toFixed(2)
+              (
+                (parseInt(selectedStatistics.free_throws_made) +
+                  parseInt(selectedStatistics.field_goals_made) +
+                  parseInt(selectedStatistics.three_pointers_made)) /
+                  parseInt(selectedStatistics.free_throws_attempted) +
+                (parseInt(selectedStatistics.field_goals_attempted) +
+                  parseInt(selectedStatistics.three_pointers_attempted))
+              ).toFixed(2)
             }}%
           </p>
-          <p class="q-mb-none">
-            Games Won Percentage:
-            {{
-              (parseInt(selectedStatistics.games_won) /
-              (parseInt(selectedStatistics.games_won) +
-                parseInt(selectedStatistics.games_lost)) * 100).toFixed(2)
-            }}%
+          <p class="q-mb-none row justify-between">
+            <span>Games Won Percentage:</span>
+            <span>
+              {{
+                (
+                  (parseInt(selectedStatistics.games_won) /
+                    (parseInt(selectedStatistics.games_won) +
+                      parseInt(selectedStatistics.games_lost))) *
+                  100
+                ).toFixed(2)
+              }}%
+            </span>
           </p>
         </div>
       </q-card-section>
@@ -220,19 +236,11 @@
       <q-card-actions align="right">
         <q-btn
           flat
-          label="Cancel"
+          label="Close"
           color="primary"
           v-close-popup
           style="font-size: 0.8rem"
           :disable="isBtnLoading"
-        />
-        <q-btn
-          @click.prevent="deleteStatistics"
-          flat
-          label="Delete"
-          color="red-5"
-          style="font-size: 0.8rem"
-          :loading="isBtnLoading"
         />
       </q-card-actions>
     </q-card>

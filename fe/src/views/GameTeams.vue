@@ -17,7 +17,7 @@
             @click.prevent="addModal = true"
             flat
             icon="mdi-account-circle-outline"
-            color="primary"
+            color="yellow-9"
             unelevated
             label="Add Team"
             style="font-size: 0.85rem"

@@ -1,61 +1,61 @@
 export const links = [
   {
     name: 'Dashboard',
-    to: 'dashboard',
+    to: '/dashboard',
     user_type: 'user',
     icon: 'mdi-chart-bubble'
   },
   {
     name: 'Athletes',
-    to: 'athletes',
+    to: '/athletes',
     user_type: 'admin',
     icon: 'mdi-account-circle'
   },
   {
     name: 'Teams',
-    to: 'teams',
+    to: '/teams',
     user_type: 'admin',
     icon: 'mdi-account-group'
   },
   {
     name: 'Coaches',
-    to: 'coaches',
+    to: '/coaches',
     user_type: 'admin',
     icon: 'mdi-account-tie'
   },
   {
     name: 'Schedules',
-    to: 'schedules',
+    to: '/schedules',
     user_type: 'user',
     icon: 'mdi-calendar'
   },
   {
     name: 'Player Statistics',
-    to: 'statistics',
+    to: '/statistics',
     user_type: 'admin',
     icon: 'mdi-chart-timeline-variant'
   },
   {
     name: 'Evaluations',
-    to: 'evaluations',
+    to: '/evaluations',
     user_type: 'admin',
     icon: 'mdi-file-edit-outline'
   },
   {
     name: 'Player Evaluation',
-    to: 'player-evaluation',
+    to: '/player-evaluation',
     user_type: 'admin',
     icon: 'mdi-speedometer'
   },
   {
     name: 'Drills',
-    to: 'drills',
+    to: '/drills',
     user_type: 'user',
     icon: 'mdi-basketball'
   },
   {
     name: 'Settings',
-    to: 'settings',
+    to: '/settings',
     user_type: 'user',
     icon: 'mdi-cog-outline'
   },

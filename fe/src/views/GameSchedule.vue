@@ -26,7 +26,7 @@
             @click.prevent="addModal = true"
             flat
             icon="mdi-table-large-plus"
-            color="primary"
+            color="yellow-9"
             unelevated
             label="New Schedule"
             style="font-size: 0.85rem"
@@ -586,4 +586,5 @@ const deleteSchedule = async () => {
 .my-sticky-column-table tbody tr:hover {
   cursor: pointer;
 }
+
 </style>

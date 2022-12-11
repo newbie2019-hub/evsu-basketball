@@ -15,10 +15,10 @@
       <template #top-left>
         <div>
           <q-btn
-            @click.prevent="addModal = true"
             flat
+            @click.prevent="addModal = true"
             icon="mdi-account-circle-outline"
-            color="primary"
+            color="yellow-9"
             unelevated
             label="Add Athlete"
             style="font-size: 0.85rem"
@@ -92,11 +92,19 @@
             class="flex no-wrap q-gutter-sm items-center"
             style="margin-top: -5px; padding-left: 15px; padding-right: 15px"
           >
-            <q-btn
+            <!-- <q-btn
               @click.prevent="
                 viewModal = true;
                 selectedAthlete = JSON.parse(JSON.stringify(props.row));
               "
+              flat
+              size="10px"
+              round
+              color="grey-7"
+              icon="mdi-eye"
+            /> -->
+            <q-btn
+              :to="`/athletes/${props.row.id}`"
               flat
               size="10px"
               round
@@ -628,7 +636,7 @@ const isBtnLoading = ref(false);
 const toast = useToast();
 const form = ref("");
 const saveForm = ref("");
-const athleteTable = ref('')
+const athleteTable = ref("");
 
 const toggleCreateModal = () => (addModal.value = !addModal.value);
 
@@ -647,8 +655,8 @@ onBeforeMount(async () => {
 });
 
 const filterAthleteTeam = () => {
-  athleteTable.value.requestServerInteraction()
-}
+  athleteTable.value.requestServerInteraction();
+};
 
 const filterFn = (val, update) => {
   if (val === "") {

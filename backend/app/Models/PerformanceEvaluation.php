@@ -25,4 +25,5 @@ class PerformanceEvaluation extends Model
     {
         return $this->hasMany(PerformanceCategory::class, 'per_eval_id', 'id');
     }
+
 }

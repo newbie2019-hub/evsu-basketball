@@ -19,11 +19,11 @@
       <template #top-left>
         <div>
           <q-btn
-            :to="{ name: 'New Performance' }"
             flat
+            :to="{ name: 'New Performance' }"
             no-caps
             icon="mdi-table-large-plus"
-            color="primary"
+            color="yellow-9"
             unelevated
             label="New Evaluation"
             style="font-size: 0.85rem"
@@ -68,6 +68,16 @@
             class="flex no-wrap q-gutter-sm items-center"
             style="margin-top: -5px; padding-left: 15px; padding-right: 15px"
           >
+            <q-btn
+              :to="`/player-evaluation/${props.row.id}`"
+              flat
+              size="10px"
+              round
+              color="grey-7"
+              icon="mdi-eye"
+            >
+              <q-tooltip>View Details</q-tooltip>
+            </q-btn>
             <q-btn
               @click.prevent="
                 confirmDelete = true;

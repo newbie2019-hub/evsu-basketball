@@ -15,10 +15,10 @@
       <template #top-left>
         <div>
           <q-btn
-            @click.prevent="addModal = true"
             flat
+            @click.prevent="addModal = true"
             icon="mdi-account-circle-outline"
-            color="primary"
+            color="yellow-9"
             unelevated
             label="Add Coach"
             style="font-size: 0.85rem"
@@ -56,6 +56,23 @@
             />
           </div>
         </div>
+      </template>
+      <template #body-cell-players="props">
+        <q-td :props="props">
+          <div class="row text-no-wrap no-wrap">
+            <template
+              v-for="(player, i) in props.row.players"
+              :key="`player-id-${i}`"
+            >
+              <q-chip
+                size="sm"
+                :label="
+                  player.athlete.first_name + ' ' + player.athlete.last_name
+                "
+              />
+            </template>
+          </div>
+        </q-td>
       </template>
       <template #body-cell-actions="props">
         <q-td :props="props">
@@ -547,8 +564,8 @@ import { useAthleteStore } from "../stores/athletes";
 
 const columns = [
   {
-    name: "athlete",
-    label: "Athlete",
+    name: "coach",
+    label: "Coach",
     align: "left",
     field: (row) => row.first_name + " " + row.last_name,
     sortable: false,
@@ -558,6 +575,12 @@ const columns = [
     label: "Email Address",
     align: "left",
     field: (row) => row.email,
+    sortable: false,
+  },
+  {
+    name: "players",
+    label: "Players",
+    align: "left",
     sortable: false,
   },
   {
@@ -658,30 +681,28 @@ onBeforeMount(async () => {
   await getData();
 });
 
-const assignCoachPlayers = async(data) => {
-  assignPlayers.value = true
-  selectedCoach.value = data
+const assignCoachPlayers = async (data) => {
+  assignPlayers.value = true;
+  selectedCoach.value = data;
   selectedCoach.value.user_id = [];
 
   selectedCoach.value.players.map((player) => {
-    selectedCoach.value.user_id.push(player.athlete_id)
-  })
-
-}
+    selectedCoach.value.user_id.push(player.athlete_id);
+  });
+};
 
 const savePlayerAssignment = async () => {
-  loading.value = true
+  loading.value = true;
 
   const { status, data } = await coachStore.assign(selectedCoach.value);
 
   if (status == 200) {
-    toast.success(data.msg)
-    assignPlayers.value = false
+    toast.success(data.msg);
+    assignPlayers.value = false;
     await getData();
   }
 
   loading.value = false;
-
 };
 
 const getData = async (props) => {

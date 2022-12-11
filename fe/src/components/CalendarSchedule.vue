@@ -45,5 +45,4 @@ const events = computed(() => {
 
   return sched;
 });
-
 </script>

@@ -9,4 +9,9 @@ class PerformanceCategory extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    public function category()
+    {
+        return $this->belongsTo(EvaluationCategory::class, 'evaluation_categories_id', 'id');
+    }
 }

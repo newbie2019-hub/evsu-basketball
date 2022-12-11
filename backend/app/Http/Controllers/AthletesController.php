@@ -39,6 +39,12 @@ class AthletesController extends Controller
         return $this->success('Account created successfully!');
     }
 
+    public function show(User $user)
+    {
+        $user->load(['team.team']);
+        return $this->data($user);
+    }
+
     public function update(AthleteRequest $request, User $user)
     {
         $user->update($request->validated());

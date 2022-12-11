@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PerformanceEvalRequest;
+use App\Models\Evaluation;
 use App\Models\PerformanceCategory;
 use App\Models\PerformanceEvaluation;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PerformanceEvaluationController extends Controller
 {
@@ -29,6 +31,7 @@ class PerformanceEvaluationController extends Controller
         foreach($request->evaluations as $eval) {
             foreach($eval['category'] as $categ) {
                 PerformanceCategory::create([
+                    'evaluation_id' => $categ['evaluation_id'],
                     'per_eval_id' => $evaluation->id,
                     'evaluation_categories_id' => $categ['id'],
                     'score' => $categ['score'] ?? 0,
@@ -44,6 +47,17 @@ class PerformanceEvaluationController extends Controller
     {
         $performance->update($request->validated());
         return $this->success('Performance Evaluation has been updated successfully!');
+    }
+
+
+    public function show(PerformanceEvaluation $performance)
+    {
+        $evaluation = Evaluation::with(['category', 'category.score' => function($query) use($performance) {
+            $query->where('per_eval_id', $performance->id);
+        }])->get();
+
+        $performance->load(['user:id,first_name,last_name,weight,position,height']);
+        return $this->data(['data' => $evaluation, 'performance' => $performance]);
     }
 
     public function destroy(PerformanceEvaluation $performance)

@@ -92,7 +92,7 @@
         style="height: 150px"
       >
         <div v-show="profileShown" class="absolute-bottom bg-transparent">
-          <q-avatar color="primary" size="56px" class="q-mb-sm">
+          <q-avatar color="" class="bg-white q-mb-sm" size="56px">
             <img
               v-if="user.photo && user.photo !== 'null'"
               :src="`http://127.0.0.1:8000/images/profile/${user.photo}`"

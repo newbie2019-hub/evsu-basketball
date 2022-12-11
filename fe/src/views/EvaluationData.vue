@@ -19,10 +19,10 @@
       <template #top-left v-if="user?.user_type == 'admin'">
         <div>
           <q-btn
-            @click.prevent="addModal = true"
             flat
+            @click.prevent="addModal = true"
             icon="mdi-table-large-plus"
-            color="primary"
+            color="yellow-9"
             unelevated
             label="New Evaluation"
             style="font-size: 0.85rem"
@@ -136,7 +136,10 @@
         </p>
         <p class="q-mb-none">All fields are required</p>
       </q-card-section>
-      <q-card-section class="q-pt-none" style="min-width: 380px; max-height: 400px; overflow-y: auto;">
+      <q-card-section
+        class="q-pt-none"
+        style="min-width: 380px; max-height: 400px; overflow-y: auto"
+      >
         <q-form ref="form" @submit="updateEvaluation" class="q-mt-md">
           <q-input
             outlined
@@ -340,7 +343,7 @@ const addModal = ref(false);
 const updateModal = ref(false);
 const loading = ref(false);
 
-const { user } = useAuthStore()
+const { user } = useAuthStore();
 let { pagination } = useServerPaginate();
 const { required, minLength } = useFieldRules();
 const evaluationStore = useEvaluationStore();
@@ -375,7 +378,7 @@ const removeCategory = (index) => {
 };
 
 const addUpdateCategory = () => {
-  selectedEvaluation.value.category.push({ id: '', category: "" });
+  selectedEvaluation.value.category.push({ id: "", category: "" });
 };
 
 const removeUpdateCategory = (index) => {

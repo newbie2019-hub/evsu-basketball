@@ -22,7 +22,7 @@
             @click.prevent="addModal = true"
             flat
             icon="mdi-table-large-plus"
-            color="primary"
+            color="yellow-9"
             unelevated
             label="New Category"
             style="font-size: 0.85rem"
@@ -256,9 +256,9 @@ const confirmDelete = ref(false);
 const addModal = ref(false);
 const updateModal = ref(false);
 const loading = ref(false);
-const emits = defineEmits(['categoryUpdated']);
+const emits = defineEmits(["categoryUpdated"]);
 
-const { user } = useAuthStore()
+const { user } = useAuthStore();
 let { pagination } = useServerPaginate();
 const { required, minLength } = useFieldRules();
 const categoryStore = useCategoryStore();
@@ -323,13 +323,11 @@ const saveCategory = async () => {
 const updateCategory = async () => {
   isBtnLoading.value = true;
 
-  const { data, status } = await categoryStore.update(
-    selectedCategory.value
-  );
+  const { data, status } = await categoryStore.update(selectedCategory.value);
 
   if (status === 200) {
     toast.success(data.msg);
-    categoryStore.updateDillStore()
+    categoryStore.updateDillStore();
     await getData();
   }
 

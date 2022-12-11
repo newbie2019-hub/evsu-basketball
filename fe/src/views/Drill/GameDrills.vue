@@ -17,7 +17,7 @@
             @click.prevent="addModal = true"
             flat
             icon="mdi-plus-circle-outline"
-            color="primary"
+            color="yellow-9"
             unelevated
             label="Add Drill"
             style="font-size: 0.85rem"

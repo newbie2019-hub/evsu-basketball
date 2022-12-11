@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('performance_categories', function (Blueprint $table) {
             $table->id();
             $table->foreignId('per_eval_id')->constrained('performance_evaluations')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('evaluation_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('evaluation_categories_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('score')->default(0);
             $table->foreignId('max_score')->default(5);

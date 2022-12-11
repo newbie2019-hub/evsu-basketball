@@ -18,6 +18,11 @@ const routes = [
         component: () => import("../views/UserAthletes.vue"),
       },
       {
+        path: "athletes/:id",
+        name: "Athlete Info",
+        component: () => import("../views/AthleteInfo.vue"),
+      },
+      {
         path: "teams",
         name: "Teams",
         component: () => import("../views/GameTeams.vue"),
@@ -31,6 +36,11 @@ const routes = [
         path: "player-evaluation",
         name: "Player Evaluation",
         component: () => import("../views/PlayerEvaluation.vue"),
+      },
+      {
+        path: "player-evaluation/:id",
+        name: "Player Evaluation Information",
+        component: () => import("../views/ViewPlayerEvaluation.vue"),
       },
       {
         path: "schedules",

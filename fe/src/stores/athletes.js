@@ -5,6 +5,10 @@ import { ref, computed } from "vue";
 export const useAthleteStore = defineStore("athleteStore", () => {
   let athletes = ref([]);
 
+  function getAthlete(id){
+    return api.get(`athletes/${id}`)
+  }
+
   function get(page) {
     const prop = typeof page === 'object'
     const p =  prop ? page.pagination.page : page
@@ -34,5 +38,5 @@ export const useAthleteStore = defineStore("athleteStore", () => {
     return api.post("athletes", data);
   }
 
-  return { athletes, get, deleteAthlete, update, create, athleteOptions };
+  return { athletes, get, getAthlete, deleteAthlete, update, create, athleteOptions };
 });
