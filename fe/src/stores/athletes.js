@@ -9,6 +9,11 @@ export const useAthleteStore = defineStore("athleteStore", () => {
     return api.get(`athletes/${id}`)
   }
 
+  function assignDrills(data) {
+    console.log('Received Data:', data)
+    return api.put(`athletes/assign/${data.id}`, data.drills_id)
+  }
+
   function get(page) {
     const prop = typeof page === 'object'
     const p =  prop ? page.pagination.page : page
@@ -39,5 +44,5 @@ export const useAthleteStore = defineStore("athleteStore", () => {
     return api.post("athletes", data);
   }
 
-  return { athletes, get, getAthlete, deleteAthlete, update, create, athleteOptions };
+  return { assignDrills, athletes, get, getAthlete, deleteAthlete, update, create, athleteOptions };
 });

@@ -51,6 +51,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('getTeams', [TeamController::class, 'getTeams']);
     Route::apiResource('teams', TeamController::class);
 
+    Route::put('athletes/assign/{athlete}', [AthletesController::class, 'assign']);
     Route::get('getAthletes', [AthletesController::class, 'getAthletes']);
     Route::apiResource('athletes', AthletesController::class);
 
@@ -63,6 +64,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('schedules', [GameScheduleController::class, 'schedules']);
     Route::apiResource('gameschedule', GameScheduleController::class);
 
+    Route::get('drills/getDrills', [GameDrillController::class, 'getDrills']);
     Route::apiResource('drills', GameDrillController::class);
 
     Route::apiResource('statistics', PlayerStatisticsController::class);

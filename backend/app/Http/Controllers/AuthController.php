@@ -16,7 +16,8 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         if (Auth::attempt($request->only('email', 'password'), $request->remember_me)) {
-            $user = Auth::user();
+            $user = User::find(auth()->id());
+            $user->load(['players', 'drills']);
 
             $token = $user->createToken('auth')->accessToken;
 
@@ -51,7 +52,9 @@ class AuthController extends Controller
 
     public function authUser()
     {
-        return $this->success('User authenticated', ['user' => auth('api')->user()]);
+        $user = auth('api')->user();
+
+        return $this->success('User authenticated', ['user' => $user]);
     }
 
     public function logout(Request $request)

@@ -15,13 +15,18 @@ class AthletesController extends Controller
 {
     use ApiResponse;
 
+    public function assign(User $user, Request $request)
+    {
+        $user->drills()->sync($request->all());
+        return $this->success('Drills has been assigned successfully!');
+    }
 
     public function index(Request $request)
     {
         $teamQuery = $request->filter_by_team == 'null' ? '' : $request->filter_by_team;
         $athletes = AthleteCoachAssignee::where('coach_id', auth()->id())->pluck('athlete_id')->toArray();
 
-        $athletes = User::with('team.team')->where('user_type', '<>', 'admin')
+        $athletes = User::with(['team.team', 'drills'])->where('user_type', '<>', 'admin')
             ->where('position', '<>', 'Assistant-Coach')
             ->when($request->assignedPlayers, fn($query)
                 => $query->whereIn('id', $athletes)

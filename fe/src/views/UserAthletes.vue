@@ -23,7 +23,14 @@
             label="Add Athlete"
             style="font-size: 0.85rem"
           />
-          <q-toggle v-if="user.position == 'Assistant-Coach'" v-model="pagination.assignedPlayers" @update:model-value="filterAthleteTeam" true-value="Yes" false-value="" label="Assigned Players Only" />
+          <q-toggle
+            v-if="user.position == 'Assistant-Coach'"
+            v-model="pagination.assignedPlayers"
+            @update:model-value="filterAthleteTeam"
+            true-value="Yes"
+            false-value=""
+            label="Assigned Players Only"
+          />
         </div>
       </template>
       <template #top-right>
@@ -93,17 +100,18 @@
             class="flex no-wrap q-gutter-sm items-center"
             style="margin-top: -5px; padding-left: 15px; padding-right: 15px"
           >
-            <!-- <q-btn
+            <q-btn
+              v-if="allowAssignDrill(props.row.id)"
               @click.prevent="
-                viewModal = true;
-                selectedAthlete = JSON.parse(JSON.stringify(props.row));
+                assignDrills = true;
+                setSelectedAthlete(JSON.parse(JSON.stringify(props.row)));
               "
               flat
               size="10px"
               round
               color="grey-7"
-              icon="mdi-eye"
-            /> -->
+              icon="mdi-basketball"
+            />
             <q-btn
               :to="`/athletes/${props.row.id}`"
               flat
@@ -264,7 +272,7 @@
             dense
             disable
             v-model="selectedAthlete.email"
-            label="First Name"
+            label="Email Address"
           />
           <q-input
             outlined
@@ -570,8 +578,63 @@
       </q-card-actions>
     </q-card>
   </q-dialog>
+
+  <q-dialog v-model="assignDrills" persistent>
+    <q-card style="max-width: 380px">
+      <q-card-section class="">
+        <p class="q-mb-none text-weight-medium" style="font-size: 1.1rem">
+          Assign Drills
+        </p>
+        <p class="q-mb-none q-mt-sm">
+          Select multiple drills to be assigned for this player
+        </p>
+        <q-select
+          class="q-mt-md"
+          outlined
+          dense
+          v-model="selectedAthlete.drills_id"
+          use-input
+          input-debounce="300"
+          label="Select Drills"
+          :options="drills"
+          option-value="id"
+          :option-label="(item) => item.drill"
+          @filter="filterDrills"
+          emit-value
+          map-options
+          multiple
+        >
+          <template v-slot:no-option>
+            <q-item>
+              <q-item-section class="text-grey"> No results </q-item-section>
+            </q-item>
+          </template>
+        </q-select>
+      </q-card-section>
+
+      <q-card-actions align="right">
+        <q-btn
+          flat
+          label="Cancel"
+          color="primary"
+          v-close-popup
+          style="font-size: 0.8rem"
+          :disable="isBtnLoading"
+        />
+        <q-btn
+          @click.prevent="assignPlayerDrills"
+          flat
+          label="Assign"
+          color="green"
+          style="font-size: 0.8rem"
+          :loading="isBtnLoading"
+        />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
 </template>
 <script setup>
+import { useDrillsStore } from "../stores/drills.js";
 import { useAthleteStore } from "../stores/athletes.js";
 import { useAuthStore } from "src/stores/authentication";
 import { onBeforeMount, ref, toRef, watch } from "vue";
@@ -665,14 +728,17 @@ const userData = ref({
 });
 
 let { teamsOption } = useTeamStore();
-const { user } = useAuthStore()
+const { user } = useAuthStore();
 const selectedAthlete = ref({});
 const confirmDelete = ref(false);
+const { drillsOptions } = useDrillsStore();
 const addModal = ref(false);
 const updateModal = ref(false);
+const assignDrills = ref(false);
 const loading = ref(false);
 const viewModal = ref(false);
 const allTeams = ref([]);
+const drills = ref([]);
 
 const genderOptions = ["Male", "Female"];
 const posOptions = [
@@ -707,6 +773,7 @@ const submitSaveForm = async () => {
 
 onBeforeMount(async () => {
   await getData();
+  allowAssignDrill();
 });
 
 const filterAthleteTeam = () => {
@@ -753,9 +820,9 @@ const saveAthlete = async () => {
   isBtnLoading.value = true;
 
   const { data, status } = await athleteStore.create(userData.value);
-  toast.success(data.msg);
 
   if (status === 200) {
+    toast.success(data.msg);
     saveForm.value.reset();
     await getData();
   }
@@ -791,6 +858,50 @@ const deleteAthlete = async () => {
 
   isBtnLoading.value = false;
   toggleDeleteModal();
+};
+
+const allowAssignDrill = (id) => {
+  const users = user.players?.map((player) => player.athlete_id);
+  if(users.includes(id)) return true
+
+  return false
+};
+
+const setSelectedAthlete = (data) => {
+  selectedAthlete.value = data;
+  selectedAthlete.value.drills_id = [];
+  data.drills.map((drill) => {
+    selectedAthlete.value.drills_id.push(drill.id);
+  });
+};
+
+const filterDrills = (val, update) => {
+  if (val === "") {
+    update(async () => {
+      return ["Search"];
+    });
+  }
+
+  update(async () => {
+    const { data } = await drillsOptions(val);
+    drills.value = data;
+  });
+};
+
+const assignPlayerDrills = async () => {
+  isBtnLoading.value = true;
+
+  const { data, status } = await athleteStore.assignDrills(
+    selectedAthlete.value
+  );
+
+  if (status === 200) {
+    toast.success(data.msg);
+    filterAthleteTeam();
+  }
+
+  isBtnLoading.value = false;
+  assignDrills.value = false;
 };
 </script>
 

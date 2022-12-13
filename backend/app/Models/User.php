@@ -86,4 +86,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(User::class, 'athlete_id', 'id');
     }
+
+    public function drills()
+    {
+        return $this->belongsToMany(GameDrill::class);
+    }
 }

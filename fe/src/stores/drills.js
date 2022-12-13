@@ -14,6 +14,10 @@ export const useDrillsStore = defineStore("drillStore", () => {
     return api.get(`drills?page=${p}&search=${search}&per_page=${perPage}`);
   }
 
+  function drillsOptions(search){
+    return api.get(`drills/getDrills?search=${search}`)
+  }
+
   function deleteDrill(data) {
     return api.delete(`drills/${data}`);
   }
@@ -26,5 +30,5 @@ export const useDrillsStore = defineStore("drillStore", () => {
     return api.post("drills", data);
   }
 
-  return { drills, get, deleteDrill, update, create };
+  return { drills, get, deleteDrill, update, create, drillsOptions };
 });

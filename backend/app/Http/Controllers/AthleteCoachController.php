@@ -52,6 +52,6 @@ class AthleteCoachController extends Controller
                 'athlete_id' => $data
             ]);
         }
-        return $this->success('Category has been updated successfully!');
+        return $this->success('Athlete\'s has been updated successfully!');
     }
 }

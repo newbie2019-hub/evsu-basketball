@@ -14,10 +14,10 @@ class GameDrillController extends Controller
     public function index(Request $request)
     {
         $gameschedule = GameDrill::with('category')->when($request->search, fn ($query, $search)
-            => $query->where('description', 'like', '%' . $search . '%')
-            ->orWhere('drill', 'like', '%'. $search .'%')
-            ->orWhereRelation('category', 'category', 'like', '%'. $search .'%'))
-        ->paginate($request->per_page);
+        => $query->where('description', 'like', '%' . $search . '%')
+            ->orWhere('drill', 'like', '%' . $search . '%')
+            ->orWhereRelation('category', 'category', 'like', '%' . $search . '%'))
+            ->paginate($request->per_page);
 
         return $this->data($gameschedule);
     }
@@ -38,5 +38,15 @@ class GameDrillController extends Controller
     {
         $drill->delete();
         return $this->success('Game Drill has been removed successfully!');
+    }
+
+    public function getDrills(Request $request)
+    {
+
+        $gamedrills = GameDrill::when($request->search, fn ($query, $search)
+                    => $query->where('drill', 'like', '%' . $search . '%'))
+                    ->latest()->take(10)->get();
+
+        return $this->data($gamedrills);
     }
 }
