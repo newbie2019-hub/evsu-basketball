@@ -1,8 +1,8 @@
 <template>
   <div class="chart full-width">
     <apexchart
-      type="line"
-      height="420"
+      type="bar"
+      height="400"
       :options="options"
       :series="series"
     ></apexchart>

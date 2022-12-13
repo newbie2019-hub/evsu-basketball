@@ -585,20 +585,6 @@ const columns = [
     sortable: false,
   },
   {
-    name: "height",
-    label: "Height",
-    align: "left",
-    field: (row) => row.height + "cm",
-    sortable: false,
-  },
-  {
-    name: "weight",
-    label: "Weight",
-    align: "left",
-    field: (row) => row.weight + "kg",
-    sortable: false,
-  },
-  {
     name: "contact",
     label: "Contact Number",
     align: "left",

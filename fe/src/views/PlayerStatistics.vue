@@ -16,7 +16,10 @@
           {{ props.row.description }}
         </q-td>
       </template>
-      <template #top-left v-if="user?.user_type == 'admin'">
+      <template
+        #top-left
+        v-if="user?.user_type == 'admin' || user.position == 'Assistant-Coach'"
+      >
         <div>
           <q-btn
             flat
@@ -69,8 +72,8 @@
           >
             <q-btn
               @click.prevent="
+                setSelectedStatistics(props.row);
                 viewResults = true;
-                selectedStatistics = JSON.parse(JSON.stringify(props.row));
               "
               flat
               size="10px"
@@ -107,7 +110,7 @@
   </div>
 
   <q-dialog v-model="viewResults" persistent>
-    <q-card style="min-width: 350px; max-width: 380px">
+    <q-card style="min-width: 480px; max-width: 480px">
       <q-card-section class="">
         <p class="q-mb-none text-weight-medium" style="font-size: 1.1rem">
           Calculated Results
@@ -115,121 +118,8 @@
         <p class="q-mb-none q-mt-sm">
           Here are the calculated results based on the given data.
         </p>
-        <div class="q-mt-sm">
-          <p class="q-mb-none row justify-between">
-            <span>Total Shot Attemps:</span>
-            {{
-              totalShotAttempts(
-                selectedStatistics.free_throws_attempted,
-                selectedStatistics.field_goals_attempted,
-                selectedStatistics.three_pointers_attempted
-              )
-            }}
-          </p>
-          <p class="q-mb-none row justify-between">
-            <span>Total Field Attempts (No Free Throws):</span>
-            {{
-              totalFieldAttempts(
-                selectedStatistics.field_goals_attempted,
-                selectedStatistics.three_pointers_attempted
-              )
-            }}
-          </p>
-          <p class="q-mb-none row justify-between">
-            <span>Free Throw Points Scored:</span>
-            {{ selectedStatistics.three_pointers_made }}
-          </p>
-          <p class="q-mb-none row justify-between">
-            <span>Field Goals Points Scored:</span>
-            {{ parseInt(selectedStatistics.field_goals_made) * 2 }}
-          </p>
-          <p class="q-mb-none row justify-between">
-            <span>Three Pointer Points Scored:</span>
-            {{ parseInt(selectedStatistics.three_pointers_made) * 3 }}
-          </p>
-          <p class="q-mb-none row justify-between">
-            <span>Total Field Points Scored:</span>
-            {{
-              parseInt(selectedStatistics.field_goals_made) +
-              parseInt(selectedStatistics.three_pointers_made)
-            }}
-          </p>
-          <p class="q-mb-none row justify-between">
-            <span>Total Points Scored:</span>
-            {{
-              parseInt(selectedStatistics.free_throws_made) +
-              parseInt(selectedStatistics.field_goals_made) +
-              parseInt(selectedStatistics.three_pointers_made)
-            }}
-          </p>
-          <p class="q-mb-none row justify-between">
-            <span>Free Throw Percentage:</span>
-
-            {{
-              (
-                (parseInt(selectedStatistics.free_throws_made) /
-                  parseInt(selectedStatistics.free_throws_attempted)) *
-                100
-              ).toFixed(2)
-            }}%
-          </p>
-          <p class="q-mb-none row justify-between">
-            <span>Field Goal Percentage:</span>
-            {{
-              (
-                (parseInt(selectedStatistics.field_goals_made) /
-                  parseInt(selectedStatistics.field_goals_attempted)) *
-                100
-              ).toFixed(2)
-            }}%
-          </p>
-          <p class="q-mb-none row justify-between">
-            <span>Three Pointer Percentage:</span>
-            {{
-              (
-                (parseInt(selectedStatistics.three_pointers_made) /
-                  parseInt(selectedStatistics.three_pointers_attempted)) *
-                100
-              ).toFixed(2)
-            }}%
-          </p>
-          <p class="q-mb-none row justify-between">
-            <span>Total Field Shooting Percentage:</span>
-            {{
-              (
-                (parseInt(selectedStatistics.field_goals_made) +
-                  parseInt(selectedStatistics.three_pointers_made)) /
-                  parseInt(selectedStatistics.field_goals_attempted) +
-                parseInt(selectedStatistics.three_pointers_attempted)
-              ).toFixed(2)
-            }}%
-          </p>
-          <p class="q-mb-none row justify-between">
-            <span>Total Shooting Percentage:</span>
-            {{
-              (
-                (parseInt(selectedStatistics.free_throws_made) +
-                  parseInt(selectedStatistics.field_goals_made) +
-                  parseInt(selectedStatistics.three_pointers_made)) /
-                  parseInt(selectedStatistics.free_throws_attempted) +
-                (parseInt(selectedStatistics.field_goals_attempted) +
-                  parseInt(selectedStatistics.three_pointers_attempted))
-              ).toFixed(2)
-            }}%
-          </p>
-          <p class="q-mb-none row justify-between">
-            <span>Games Won Percentage:</span>
-            <span>
-              {{
-                (
-                  (parseInt(selectedStatistics.games_won) /
-                    (parseInt(selectedStatistics.games_won) +
-                      parseInt(selectedStatistics.games_lost))) *
-                  100
-                ).toFixed(2)
-              }}%
-            </span>
-          </p>
+        <div class="q-my-lg">
+          <BarChart :series="series" :options="chartOptions" />
         </div>
       </q-card-section>
 
@@ -582,6 +472,7 @@ import { useServerPaginate } from "../composable/useServerPaginate";
 import { useFieldRules } from "../composable/useFieldRules";
 import { useAuthStore } from "src/stores/authentication";
 import { useAthleteStore } from "src/stores/athletes";
+import BarChart from "src/components/BarChart.vue";
 
 const columns = [
   {
@@ -681,6 +572,86 @@ const updateModal = ref(false);
 const loading = ref(false);
 const { user } = useAuthStore();
 const { athleteOptions } = useAthleteStore();
+const series = ref([]);
+const chartOptions = ref({
+  chart: {
+    height: 300,
+    width: "100%",
+    type: "bar",
+  },
+  stroke: {
+    colors: ["transparent"],
+    width: 3,
+  },
+  plotOptions: {
+    bar: {
+      borderRadius: 5,
+      dataLabels: {
+        position: "top", // top, center, bottom
+      },
+      columnWidth: "40%",
+    },
+  },
+  dataLabels: {
+    enabled: true,
+    formatter: function (val) {
+      return val + "%";
+    },
+    offsetY: -20,
+    style: {
+      fontSize: "12px",
+      colors: ["#304758"],
+    },
+  },
+  xaxis: {
+    categories: [],
+    position: "bottom",
+    axisBorder: {
+      show: false,
+    },
+    axisTicks: {
+      show: false,
+    },
+    crosshairs: {
+      fill: {
+        type: "gradient",
+        gradient: {
+          colorFrom: "#D8E3F0",
+          colorTo: "#BED1E6",
+          stops: [0, 100],
+          opacityFrom: 0.4,
+          opacityTo: 0.5,
+        },
+      },
+    },
+    tooltip: {
+      enabled: true,
+    },
+  },
+  yaxis: {
+    axisBorder: {
+      show: false,
+    },
+    axisTicks: {
+      show: false,
+    },
+    labels: {
+      show: false,
+      formatter: function (val) {
+        return val + "%";
+      },
+    },
+  },
+  title: {
+    text: "Player Statistics",
+    floating: true,
+    offsetY: 0,
+    align: "center",
+    style: {
+      color: "#444",
+    },
+  },
+});
 
 const gameType = [
   "Official Game",
@@ -726,6 +697,57 @@ const filterFn = (val, update) => {
   update(async () => {
     const { data } = await athleteOptions(val);
     athletes.value = data;
+  });
+};
+
+const setSelectedStatistics = (data) => {
+  selectedStatistics.value = data;
+  selectedStatistics.value.chart = {
+    categories: ["FT ", "FG ", "TP ", "FS", "Shooting", "Win "],
+    data: [
+      (
+        (parseInt(selectedStatistics.value.free_throws_made) /
+          parseInt(selectedStatistics.value.free_throws_attempted)) *
+        100
+      ).toFixed(2),
+      (
+        (parseInt(selectedStatistics.value.field_goals_made) /
+          parseInt(selectedStatistics.value.field_goals_attempted)) *
+        100
+      ).toFixed(2),
+      (
+        (parseInt(selectedStatistics.value.three_pointers_made) /
+          parseInt(selectedStatistics.value.three_pointers_attempted)) *
+        100
+      ).toFixed(2),
+      (
+        (parseInt(selectedStatistics.value.field_goals_made) +
+          parseInt(selectedStatistics.value.three_pointers_made)) /
+          parseInt(selectedStatistics.value.field_goals_attempted) +
+        parseInt(selectedStatistics.value.three_pointers_attempted)
+      ).toFixed(2),
+      (
+        (parseInt(selectedStatistics.value.free_throws_made) +
+          parseInt(selectedStatistics.value.field_goals_made) +
+          parseInt(selectedStatistics.value.three_pointers_made)) /
+          parseInt(selectedStatistics.value.free_throws_attempted) +
+        (parseInt(selectedStatistics.value.field_goals_attempted) +
+          parseInt(selectedStatistics.value.three_pointers_attempted))
+      ).toFixed(2),
+      (
+        (parseInt(selectedStatistics.value.games_won) /
+          (parseInt(selectedStatistics.value.games_won) +
+            parseInt(selectedStatistics.value.games_lost))) *
+        100
+      ).toFixed(2),
+    ],
+  };
+
+  chartOptions.value.xaxis.categories =
+    selectedStatistics.value.chart.categories;
+  series.value.push({
+    name: "Player Statistics",
+    data: selectedStatistics.value.chart.data,
   });
 };
 

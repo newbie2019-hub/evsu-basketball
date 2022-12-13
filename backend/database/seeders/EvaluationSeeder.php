@@ -41,7 +41,7 @@ class EvaluationSeeder extends Seeder
                 'evaluation' => 'Coachability'
             ],
             [
-                'evaluation' => 'Overall Strenghts'
+                'evaluation' => 'Overall Strengths'
             ],
         ];
 

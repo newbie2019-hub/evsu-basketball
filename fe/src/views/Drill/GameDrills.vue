@@ -29,7 +29,7 @@
         <div>
           <q-toggle
             v-if="
-              user.position != 'Assistant-Coach' || user.position != 'Coach'
+              user?.position != 'Assistant-Coach' && user.position != 'Coach'
             "
             v-model="pagination.assignedDrills"
             @update:model-value="filterAssignedDrills"
@@ -51,7 +51,7 @@
               <q-icon name="search" />
             </template>
           </q-input>
-          <div>
+          <!-- <div>
             <q-btn
               v-if="!pagination.filter"
               icon="mdi-filter-menu-outline"
@@ -68,7 +68,7 @@
               size="10px"
               @click="pagination.filter = false"
             />
-          </div>
+          </div> -->
         </div>
       </template>
       <template #body-cell-drill="props">
@@ -427,7 +427,7 @@
 
 <script setup>
 import { useDrillsStore } from "../../stores/drills.js";
-import { onBeforeMount, ref } from "vue";
+import { onBeforeMount, onMounted, ref } from "vue";
 import { useToast } from "vue-toastification";
 import { useServerPaginate } from "../../composable/useServerPaginate";
 import { useFieldRules } from "../../composable/useFieldRules";
@@ -486,6 +486,7 @@ const gameDrill = ref({
   description: "",
   drill: "",
 });
+
 const selectedDrill = ref({ instructions: "", drill: "", description: "" });
 const confirmDelete = ref(false);
 const addModal = ref(false);
@@ -511,9 +512,13 @@ const toggleCreateModal = () => (addModal.value = !addModal.value);
 
 const toggleDeleteModal = () => (confirmDelete.value = !confirmDelete.value);
 
+onMounted(() => {
+  console.log('Auth User: ', user)
+})
 const filterAssignedDrills = () => {
   drillsTable.value.requestServerInteraction()
 }
+
 const submitForm = async () => {
   await form.value.submit();
 };

@@ -52,6 +52,9 @@
           </p>
         </div>
       </div>
+      <div class="row q-my-md">
+        <BarChart :options="chartOptions" :series="series" />
+      </div>
     </div>
     <q-form ref="form">
       <div class="row wrap q-mt-md q-pb-lg q-pa-md" style="">
@@ -64,7 +67,12 @@
               <p class="q-mb-none text-weight-bold text-uppercase">
                 {{ evaluation.evaluation }}
               </p>
-              <p class="q-mb-none q-mr-md text-weight-bold" :class="getClassColor(evaluation.percentage)">{{ evaluation.percentage }}%</p>
+              <p
+                class="q-mb-none q-mr-md text-weight-bold"
+                :class="getClassColor(evaluation.percentage)"
+              >
+                {{ evaluation.percentage }}%
+              </p>
             </div>
             <template v-for="categ in evaluation.category" :key="categ.id">
               <div
@@ -108,6 +116,7 @@
 </template>
 <script setup>
 import { usePerfEvalStore } from "src/stores/performance-evaluation";
+import BarChart from "../components/BarChart.vue";
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 
@@ -115,13 +124,108 @@ const route = useRoute();
 const perfEvalStore = usePerfEvalStore();
 const form = ref("");
 const routeIDParam = ref(null);
+const series = ref([]);
+const chartOptions = ref({
+  chart: {
+    height: 300,
+    width: "100%",
+    type: "bar",
+  },
+  stroke: {
+    colors: ["transparent"],
+    width: 10,
+  },
+  plotOptions: {
+    bar: {
+      borderRadius: 10,
+      dataLabels: {
+        position: "top", // top, center, bottom
+      },
+      columnWidth: "40%",
+    },
+  },
+  dataLabels: {
+    enabled: true,
+    formatter: function (val) {
+      return val + "%";
+    },
+    offsetY: -20,
+    style: {
+      fontSize: "12px",
+      colors: ["#304758"],
+    },
+  },
+  xaxis: {
+    categories: [],
+    position: "bottom",
+    axisBorder: {
+      show: false,
+    },
+    axisTicks: {
+      show: false,
+    },
+    crosshairs: {
+      fill: {
+        type: "gradient",
+        gradient: {
+          colorFrom: "#D8E3F0",
+          colorTo: "#BED1E6",
+          stops: [0, 100],
+          opacityFrom: 0.4,
+          opacityTo: 0.5,
+        },
+      },
+    },
+    tooltip: {
+      enabled: true,
+    },
+  },
+  yaxis: {
+    axisBorder: {
+      show: false,
+    },
+    axisTicks: {
+      show: false,
+    },
+    labels: {
+      show: true,
+      formatter: function (val) {
+        return val + "%";
+      },
+    },
+  },
+  title: {
+    text: "Player Performance Evaluation",
+    floating: true,
+    offsetY: 0,
+    align: "center",
+    style: {
+      color: "#444",
+    },
+  },
+});
 
 onMounted(async () => {
   routeIDParam.value = route.params.id ?? null;
 
   await getPerformanceData();
   calcPercentages();
+
+  setChartData();
 });
+
+const setChartData = () => {
+  if (perfEvalStore.athletePerformance.data.length > 0) {
+    perfEvalStore.athletePerformance?.data.map((perf) => {
+      series.value.push({ name: perf.evaluation, data: [] });
+    });
+  }
+
+  perfEvalStore.athletePerformance?.data.map((performance, i) => {
+    chartOptions.value.xaxis.categories.push(performance.evaluation);
+    series.value[i].data.push(performance.percentage);
+  });
+};
 
 const getPerformanceData = async () => {
   const { data } = await perfEvalStore.getPerformance(routeIDParam.value);
@@ -138,17 +242,16 @@ const calcPercentages = () => {
     });
 
     evaluation.percentage = ((total / (counter * 5)) * 100).toFixed(2);
-
   });
 };
 
 const getClassColor = (percent) => {
-  if(percent < 75) {
-    return 'text-red-5'
-  } else if(percent < 85) {
-    return 'text-yellow-9'
+  if (percent < 75) {
+    return "text-red-5";
+  } else if (percent < 85) {
+    return "text-yellow-9";
   } else {
-    return 'text-green-9'
+    return "text-green-9";
   }
-}
+};
 </script>

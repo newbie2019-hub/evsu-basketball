@@ -36,7 +36,7 @@
               <q-icon name="search" />
             </template>
           </q-input>
-          <div>
+          <!-- <div>
             <q-btn
               v-if="!pagination.filter"
               icon="mdi-filter-menu-outline"
@@ -53,7 +53,7 @@
               size="10px"
               @click="pagination.filter = false"
             />
-          </div>
+          </div> -->
         </div>
       </template>
       <template #body-cell-players="props">
