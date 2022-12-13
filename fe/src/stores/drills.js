@@ -10,8 +10,9 @@ export const useDrillsStore = defineStore("drillStore", () => {
     const p =  prop ? page.pagination.page : page
     const search = prop ? page.pagination.search : ''
     const perPage = prop ? page.pagination.rowsPerPage : 10
+    const assignedDrills = prop ? page.pagination.assignedDrills : ''
 
-    return api.get(`drills?page=${p}&search=${search}&per_page=${perPage}`);
+    return api.get(`drills?page=${p}&search=${search}&per_page=${perPage}&assigned_drills=${assignedDrills}`);
   }
 
   function drillsOptions(search){

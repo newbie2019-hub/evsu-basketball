@@ -1,6 +1,7 @@
 <template>
   <div class="q-my-md">
     <q-table
+      ref="drillsTable"
       flat
       class="my-sticky-column-table"
       :rows="drillStore.drills.data"
@@ -21,6 +22,20 @@
             unelevated
             label="Add Drill"
             style="font-size: 0.85rem"
+          />
+        </div>
+      </template>
+      <template #top-left v-else>
+        <div>
+          <q-toggle
+            v-if="
+              user.position != 'Assistant-Coach' || user.position != 'Coach'
+            "
+            v-model="pagination.assignedDrills"
+            @update:model-value="filterAssignedDrills"
+            true-value="Yes"
+            false-value=""
+            label="Assigned Drills"
           />
         </div>
       </template>
@@ -142,8 +157,10 @@
         </p>
         <p class="text-weight-medium q-mb-none q-mt-sm">Duration:</p>
         <div class="flex items-center no-wrap">
-          <p class="q-mb-sm">Hours: {{ selectedDrill.hours }}</p>,&nbsp;
-          <p class="q-mb-sm">Minutes: {{ selectedDrill.minutes }}</p>,&nbsp;
+          <p class="q-mb-sm">Hours: {{ selectedDrill.hours }}</p>
+          ,&nbsp;
+          <p class="q-mb-sm">Minutes: {{ selectedDrill.minutes }}</p>
+          ,&nbsp;
           <p class="q-mb-sm">Seconds: {{ selectedDrill.seconds }}</p>
         </div>
         <p class="text-weight-medium">Instructions:</p>
@@ -310,7 +327,10 @@
         </p>
         <p class="q-mb-none">Create new game drills for your players</p>
       </q-card-section>
-      <q-card-section class="q-pt-none" style="max-height: 400px; overflow-y: auto;">
+      <q-card-section
+        class="q-pt-none"
+        style="max-height: 400px; overflow-y: auto"
+      >
         <q-form ref="saveForm" @submit="saveDrill" class="q-mt-md">
           <q-input
             outlined
@@ -412,7 +432,7 @@ import { useToast } from "vue-toastification";
 import { useServerPaginate } from "../../composable/useServerPaginate";
 import { useFieldRules } from "../../composable/useFieldRules";
 import { useCategoryStore } from "src/stores/category";
-import { useAuthStore } from '../../stores/authentication'
+import { useAuthStore } from "../../stores/authentication";
 
 const columns = [
   {
@@ -473,6 +493,7 @@ const updateModal = ref(false);
 const viewModal = ref(false);
 const loading = ref(false);
 const categories = ref(false);
+const drillsTable = ref('')
 
 const { user } = useAuthStore();
 let { pagination } = useServerPaginate();
@@ -490,6 +511,9 @@ const toggleCreateModal = () => (addModal.value = !addModal.value);
 
 const toggleDeleteModal = () => (confirmDelete.value = !confirmDelete.value);
 
+const filterAssignedDrills = () => {
+  drillsTable.value.requestServerInteraction()
+}
 const submitForm = async () => {
   await form.value.submit();
 };
