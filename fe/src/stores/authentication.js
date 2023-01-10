@@ -39,5 +39,9 @@ export const useAuthStore = defineStore("userStore", () => {
     return api.get("authUser");
   }
 
-  return { user, login, register, logout, authUser, update };
+  function finishDrill(data) {
+    return api.post("finish-drill", data)
+  }
+
+  return { user, login, register, logout, authUser, update, finishDrill };
 });

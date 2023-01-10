@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PerformanceEvalRequest;
+use App\Models\AthleteCoachAssignee;
 use App\Models\Evaluation;
 use App\Models\PerformanceCategory;
 use App\Models\PerformanceEvaluation;
@@ -16,10 +17,22 @@ class PerformanceEvaluationController extends Controller
 
     public function index(Request $request)
     {
-        $performanceEvaluation = PerformanceEvaluation::with(['user', 'category'])->when($request->search, fn ($query, $search)
+        $athletes = AthleteCoachAssignee::where('coach_id', auth()->id())->pluck('athlete_id')->toArray();
+
+        if (auth()->user()->position === 'Assistant-Coach') {
+            $performanceEvaluation = PerformanceEvaluation::withWhereHas('user', function($query) use($athletes){
+                $query->whereIn('id', $athletes);
+            })->when($request->search, fn ($query, $search)
             => $query->whereRelation('user', 'first_name', 'like', '%' . $search . '%')
-            ->orWhereRelation('user', 'last_name', 'like', '%' . $search . '%'))
-        ->paginate($request->per_page);
+                ->orWhereRelation('user', 'last_name', 'like', '%' . $search . '%'))
+                ->with(['category'])
+                ->paginate($request->per_page);
+        } else {
+            $performanceEvaluation = PerformanceEvaluation::with(['user', 'category'])->when($request->search, fn ($query, $search)
+            => $query->whereRelation('user', 'first_name', 'like', '%' . $search . '%')
+                ->orWhereRelation('user', 'last_name', 'like', '%' . $search . '%'))
+                ->paginate($request->per_page);
+        }
 
         return $this->data($performanceEvaluation);
     }
@@ -28,8 +41,8 @@ class PerformanceEvaluationController extends Controller
     {
         $evaluation = PerformanceEvaluation::create($request->validated());
 
-        foreach($request->evaluations as $eval) {
-            foreach($eval['category'] as $categ) {
+        foreach ($request->evaluations as $eval) {
+            foreach ($eval['category'] as $categ) {
                 PerformanceCategory::create([
                     'evaluation_id' => $categ['evaluation_id'],
                     'per_eval_id' => $evaluation->id,
@@ -52,7 +65,7 @@ class PerformanceEvaluationController extends Controller
 
     public function show(PerformanceEvaluation $performance)
     {
-        $evaluation = Evaluation::with(['category', 'category.score' => function($query) use($performance) {
+        $evaluation = Evaluation::with(['category', 'category.score' => function ($query) use ($performance) {
             $query->where('per_eval_id', $performance->id);
         }])->get();
 

@@ -1,3 +1,17 @@
+Categorize each school year or season of each player 
+
+Player full score or performance of the game display [x]
+
+Ass coach can only view assigned players statistic data or performance [x]
+
+Display player progress on each drills
+
+Drills must retain even when new drills are assigned [x]
+
+Number of attempts percentage view [x]
+
+Cite the standard for every statistic record
+
 Registration Data
 first_name
 last_name

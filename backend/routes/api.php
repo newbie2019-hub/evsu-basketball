@@ -64,6 +64,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('schedules', [GameScheduleController::class, 'schedules']);
     Route::apiResource('gameschedule', GameScheduleController::class);
 
+    Route::get('finished-drills', [GameDrillController::class, 'getFinishedDrills']);
+    Route::post('finish-drill', [GameDrillController::class, 'finishDrill']);
+
     Route::get('drills/getDrills', [GameDrillController::class, 'getDrills']);
     Route::apiResource('drills', GameDrillController::class);
 

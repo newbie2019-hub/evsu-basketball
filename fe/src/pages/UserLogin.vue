@@ -3,8 +3,10 @@
     <div class="col-11 col-xs-7 col-sm-5 col-md-3">
       <q-card>
         <q-card-section style="padding: 2.4rem 2rem">
-          <div class="flex items-center justify-center">
-            <img src="../assets/images/eagles_logo.png" alt="" height="60" />
+          <div class="column items-center justify-center">
+            <div class="flex">
+              <img src="../assets/images/eagles_logo.png" alt="" height="60" />
+            </div>
             <div class="text-center q-mt-md">
               <p class="text-weight-medium q-mb-none" style="font-size: 1.4rem">
                 Login Account

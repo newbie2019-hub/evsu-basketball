@@ -51,24 +51,6 @@
               <q-icon name="search" />
             </template>
           </q-input>
-          <!-- <div>
-            <q-btn
-              v-if="!pagination.filter"
-              icon="mdi-filter-menu-outline"
-              round
-              flat
-              size="10px"
-              @click="pagination.filter = true"
-            />
-            <q-btn
-              v-else
-              icon="mdi-filter-minus-outline"
-              round
-              flat
-              size="10px"
-              @click="pagination.filter = false"
-            />
-          </div> -->
         </div>
       </template>
       <template #body-cell-drill="props">
@@ -110,6 +92,9 @@
               icon="mdi-eye"
             />
             <q-btn
+              v-if="
+                user?.position == 'Coach' || user?.position == 'Assistant-Coach'
+              "
               @click.prevent="
                 updateModal = true;
                 selectedDrill = JSON.parse(JSON.stringify(props.row));
@@ -121,6 +106,9 @@
               icon="mdi-pencil-outline"
             />
             <q-btn
+              v-if="
+                user?.position == 'Coach' || user?.position == 'Assistant-Coach'
+              "
               @click.prevent="
                 confirmDelete = true;
                 selectedDrill = props.row;
@@ -174,6 +162,16 @@
           color="primary"
           v-close-popup
           style="font-size: 0.8rem"
+          :disable="isBtnLoading"
+        />
+        <q-btn
+          v-if="user?.position != 'Coach'"
+          flat
+          label="Mark as Finished"
+          color="green"
+          v-close-popup
+          style="font-size: 0.8rem"
+          @click.prevent="markAsFinish"
           :disable="isBtnLoading"
         />
       </q-card-actions>
@@ -494,9 +492,9 @@ const updateModal = ref(false);
 const viewModal = ref(false);
 const loading = ref(false);
 const categories = ref(false);
-const drillsTable = ref('')
+const drillsTable = ref("");
 
-const { user } = useAuthStore();
+let { user, authUser, finishDrill } = useAuthStore();
 let { pagination } = useServerPaginate();
 const { required, minLength, minMaxVal, secMaxVal, hoursMaxVal, defaultVal } =
   useFieldRules();
@@ -512,12 +510,18 @@ const toggleCreateModal = () => (addModal.value = !addModal.value);
 
 const toggleDeleteModal = () => (confirmDelete.value = !confirmDelete.value);
 
+onBeforeMount(async () => {
+  const { data } = await authUser();
+  user = data.data.user;
+});
+
 onMounted(() => {
-  console.log('Auth User: ', user)
-})
+  console.log("Auth User: ", user);
+});
+
 const filterAssignedDrills = () => {
-  drillsTable.value.requestServerInteraction()
-}
+  drillsTable.value.requestServerInteraction();
+};
 
 const submitForm = async () => {
   await form.value.submit();
@@ -610,6 +614,18 @@ const deleteDrill = async () => {
   isBtnLoading.value = false;
   toggleDeleteModal();
 };
+
+const markAsFinish = async() => {
+  isBtnLoading.value = true
+  const { data, status } = await finishDrill(selectedDrill.value);
+
+  if (status === 200) {
+    toast.success(data.msg);
+    await getData();
+  }
+
+  isBtnLoading.value = false;
+}
 </script>
 
 <style>

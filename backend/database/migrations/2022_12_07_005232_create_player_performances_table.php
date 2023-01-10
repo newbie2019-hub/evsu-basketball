@@ -22,6 +22,10 @@ return new class extends Migration
             $table->string('field_goals_made');
             $table->string('three_pointers_attempted');
             $table->string('three_pointers_made');
+            $table->string('total_block');
+            $table->string('total_rebound');
+            $table->string('total_steal');
+            $table->string('total_assist');
             $table->string('games_won');
             $table->string('games_lost');
             $table->timestamps();

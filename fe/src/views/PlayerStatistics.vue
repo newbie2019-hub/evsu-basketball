@@ -121,6 +121,52 @@
         <div class="q-my-lg">
           <BarChart :series="series" :options="chartOptions" />
         </div>
+        <div class="row q-gutter-lg">
+          <div>
+            <p class="q-mb-none">
+              Free Throws Score: {{ selectedStatistics.data.free_throws }}
+            </p>
+            <p class="q-mb-none">
+              Field Goals Score: {{ selectedStatistics.data.field_goals }}
+            </p>
+            <p class="q-mb-none">
+              Three Points Score: {{ selectedStatistics.data.three_points }}
+            </p>
+            <p class="q-mb-none">
+              Total Shot Attempts:
+              {{
+                totalShotAttempts(
+                  selectedStatistics.free_throws_attempted,
+                  selectedStatistics.field_goals_attempted,
+                  selectedStatistics.three_pointers_attempted
+                )
+              }}
+            </p>
+            <p class="q-mb-none">
+              Total Field Attempts:
+              {{ selectedStatistics.field_goals_attempted }}
+            </p>
+            <p class="q-mb-none">
+              Three-Point Attempts:
+              {{ selectedStatistics.three_pointers_attempted }}
+            </p>
+          </div>
+          <div>
+            <p class="q-mb-none">
+              Total Rebounds:
+              {{ selectedStatistics.total_rebound }}
+            </p>
+            <p class="q-mb-none">
+              Total Blocks: {{ selectedStatistics.total_block }}
+            </p>
+            <p class="q-mb-none">
+              Total Steal {{ selectedStatistics.total_steal }}
+            </p>
+            <p class="q-mb-none">
+              Total Assists {{ selectedStatistics.total_assist }}
+            </p>
+          </div>
+        </div>
       </q-card-section>
 
       <q-card-actions align="right">
@@ -253,6 +299,58 @@
                 dense
                 v-model="selectedStatistics.three_pointers_made"
                 label="TP Made"
+              />
+            </div>
+          </div>
+          <div class="row q-gutter-sm">
+            <div class="col">
+              <q-input
+                outlined
+                type="number"
+                :rules="[required]"
+                hide-bottom-space
+                class="q-mt-sm"
+                dense
+                v-model="selectedStatistics.total_block"
+                label="Total Blocks"
+              />
+            </div>
+            <div class="col">
+              <q-input
+                outlined
+                type="number"
+                :rules="[required]"
+                hide-bottom-space
+                class="q-mt-sm"
+                dense
+                v-model="selectedStatistics.total_rebound"
+                label="Total Rebound"
+              />
+            </div>
+          </div>
+          <div class="row q-gutter-sm">
+            <div class="col">
+              <q-input
+                outlined
+                type="number"
+                :rules="[required]"
+                hide-bottom-space
+                class="q-mt-sm"
+                dense
+                v-model="selectedStatistics.total_steal"
+                label="Total Steals"
+              />
+            </div>
+            <div class="col">
+              <q-input
+                outlined
+                type="number"
+                :rules="[required]"
+                hide-bottom-space
+                class="q-mt-sm"
+                dense
+                v-model="selectedStatistics.total_assist"
+                label="Total Assists"
               />
             </div>
           </div>
@@ -423,6 +521,58 @@
                 hide-bottom-space
                 class="q-mt-sm"
                 dense
+                v-model="playerStatistics.total_block"
+                label="Total Blocks"
+              />
+            </div>
+            <div class="col">
+              <q-input
+                outlined
+                type="number"
+                :rules="[required]"
+                hide-bottom-space
+                class="q-mt-sm"
+                dense
+                v-model="playerStatistics.total_rebound"
+                label="Total Rebound"
+              />
+            </div>
+          </div>
+          <div class="row q-gutter-sm">
+            <div class="col">
+              <q-input
+                outlined
+                type="number"
+                :rules="[required]"
+                hide-bottom-space
+                class="q-mt-sm"
+                dense
+                v-model="playerStatistics.total_steal"
+                label="Total Steals"
+              />
+            </div>
+            <div class="col">
+              <q-input
+                outlined
+                type="number"
+                :rules="[required]"
+                hide-bottom-space
+                class="q-mt-sm"
+                dense
+                v-model="playerStatistics.total_assist"
+                label="Total Assists"
+              />
+            </div>
+          </div>
+          <div class="row q-gutter-sm">
+            <div class="col">
+              <q-input
+                outlined
+                type="number"
+                :rules="[required]"
+                hide-bottom-space
+                class="q-mt-sm"
+                dense
                 v-model="playerStatistics.games_won"
                 label="Games Won"
               />
@@ -525,6 +675,34 @@ const columns = [
     sortable: false,
   },
   {
+    name: "total_blocks",
+    label: "Blocks",
+    align: "left",
+    field: (row) => row.total_block,
+    sortable: false,
+  },
+  {
+    name: "total_steal",
+    label: "Steals",
+    align: "left",
+    field: (row) => row.total_steal,
+    sortable: false,
+  },
+  {
+    name: "total_assists",
+    label: "Blocks",
+    align: "left",
+    field: (row) => row.total_assist,
+    sortable: false,
+  },
+  {
+    name: "total_rebound",
+    label: "Rebounds",
+    align: "left",
+    field: (row) => row.total_rebound,
+    sortable: false,
+  },
+  {
     name: "games_won",
     label: "Games Won",
     align: "left",
@@ -564,7 +742,7 @@ const playerStatistics = ref({
   games_lost: "",
 });
 
-const selectedStatistics = ref({});
+const selectedStatistics = ref({ data: {} });
 const confirmDelete = ref(false);
 const viewResults = ref(false);
 const addModal = ref(false);
@@ -701,9 +879,29 @@ const filterFn = (val, update) => {
 };
 
 const setSelectedStatistics = (data) => {
+  selectedStatistics.value = { data: {} };
+
   selectedStatistics.value = data;
+  selectedStatistics.value.data = {
+    free_throws: 0,
+    field_goals: 0,
+    three_points: 0,
+    total_score: 0,
+  };
+
+  selectedStatistics.value.data.free_throws =
+    parseInt(selectedStatistics.value.free_throws_made) * 2;
+  selectedStatistics.value.data.field_goals =
+    parseInt(selectedStatistics.value.field_goals_made) * 2;
+  selectedStatistics.value.data.three_points =
+    parseInt(selectedStatistics.value.three_pointers_made) * 3;
+  selectedStatistics.value.data.total_score =
+    selectedStatistics.value.data.free_throws +
+    selectedStatistics.value.three_points +
+    selectedStatistics.value.free_throws;
+
   selectedStatistics.value.chart = {
-    categories: ["FT ", "FG ", "TP ", "FS", "Shooting", "Win "],
+    categories: ["FT ", "FG ", "TP ", "FS", "Shooting", "Win"],
     data: [
       (
         (parseInt(selectedStatistics.value.free_throws_made) /
@@ -745,6 +943,8 @@ const setSelectedStatistics = (data) => {
 
   chartOptions.value.xaxis.categories =
     selectedStatistics.value.chart.categories;
+
+  series.value = [];
   series.value.push({
     name: "Player Statistics",
     data: selectedStatistics.value.chart.data,

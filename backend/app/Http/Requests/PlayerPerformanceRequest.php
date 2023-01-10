@@ -31,6 +31,10 @@ class PlayerPerformanceRequest extends FormRequest
             'field_goals_made' => 'required',
             'three_pointers_attempted' => 'required',
             'three_pointers_made' => 'required',
+            'total_assist' => 'required',
+            'total_rebound' => 'required',
+            'total_steal' => 'required',
+            'total_block' => 'required',
             'games_won' => 'required',
             'games_lost' => 'required',
         ];
