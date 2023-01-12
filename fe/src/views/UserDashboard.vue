@@ -118,6 +118,7 @@
   </div>
 </template>
 <script setup>
+
 import { useAuthStore } from "src/stores/authentication";
 import { useDashboardStore } from "../stores/dashboard";
 import CalendarSchedule from "../components/CalendarSchedule.vue";

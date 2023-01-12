@@ -36,8 +36,8 @@ export const links = [
   {
     name: 'Player Statistics',
     to: '/statistics',
-    user_type: 'admin',
-    isSubCoach: true,
+    // user_type: 'admin',
+    // isSubCoach: true,
     icon: 'mdi-chart-timeline-variant'
   },
   {
@@ -50,8 +50,8 @@ export const links = [
   {
     name: 'Player Evaluation',
     to: '/player-evaluation',
-    user_type: 'admin',
-    isSubCoach: true,
+    // user_type: 'admin',
+    // isSubCoach: true,
     icon: 'mdi-speedometer'
   },
   {

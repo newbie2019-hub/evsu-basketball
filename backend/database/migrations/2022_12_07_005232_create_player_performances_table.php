@@ -26,8 +26,6 @@ return new class extends Migration
             $table->string('total_rebound');
             $table->string('total_steal');
             $table->string('total_assist');
-            $table->string('games_won');
-            $table->string('games_lost');
             $table->timestamps();
         });
     }

@@ -63,12 +63,6 @@ const routes = [
         path: "player-evaluation",
         name: "Player Evaluation",
         component: () => import("../views/PlayerEvaluation.vue"),
-        beforeEnter(to, from, next) {
-          const { user } = useAuthStore();
-          if (user.position == "Coach" || user.position == "Assistant-Coach")
-            return next();
-          return next({ name: "Dashboard" });
-        },
       },
       {
         path: "player-evaluation/:id",
@@ -90,23 +84,11 @@ const routes = [
         path: "statistics",
         name: "Player Statistics",
         component: () => import("../views/PlayerStatistics.vue"),
-        beforeEnter(to, from, next) {
-          const { user } = useAuthStore();
-          if (user.position == "Coach" || user.position == "Assistant-Coach")
-            return next();
-          return next({ name: "Dashboard" });
-        },
       },
       {
         path: "evaluations",
         name: "Evaluations",
         component: () => import("../views/EvaluationData.vue"),
-        beforeEnter(to, from, next) {
-          const { user } = useAuthStore();
-          if (user.position == "Coach" || user.position == "Assistant-Coach")
-            return next();
-          return next({ name: "Dashboard" });
-        },
       },
       {
         path: "performance-new",

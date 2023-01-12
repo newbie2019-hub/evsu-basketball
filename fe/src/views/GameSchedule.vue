@@ -1,8 +1,14 @@
 <template>
   <div class="q-my-md">
+    <p class="text-h6 q-mb-none">Calendar Schedule</p>
+    <p class="text-grey-8">Shown on the calendar are the schedules for all activities.</p>
     <calendar-schedule :data="schedules" style="height: 400px" />
   </div>
-  <div class="q-my-md">
+  <div class="q-my-md q-mt-xl">
+    <div class="q-mb-lg">
+      <p class="text-h6 q-mb-none">Schedules</p>
+      <p class="text-grey-8">Shown on the table are the schedules of activities</p>
+    </div>
     <q-table
       flat
       ref="scheduleTable"

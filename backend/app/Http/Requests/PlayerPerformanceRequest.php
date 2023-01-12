@@ -35,8 +35,6 @@ class PlayerPerformanceRequest extends FormRequest
             'total_rebound' => 'required',
             'total_steal' => 'required',
             'total_block' => 'required',
-            'games_won' => 'required',
-            'games_lost' => 'required',
         ];
     }
 }

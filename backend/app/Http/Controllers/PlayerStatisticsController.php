@@ -16,7 +16,7 @@ class PlayerStatisticsController extends Controller
     {
         $athletes = AthleteCoachAssignee::where('coach_id', auth()->id())->pluck('athlete_id')->toArray();
 
-        if(auth()->user()->position === 'Assistant-Coach') {
+        if (auth()->user()->position === 'Assistant-Coach') {
             $statistics = PlayerPerformance::withWhereHas('user', function ($query) use ($athletes) {
                 $query->whereIn('id', $athletes);
             })->when($request->search, fn ($query, $search)
@@ -25,8 +25,19 @@ class PlayerStatisticsController extends Controller
                 ->orWhereRelation('user', 'last_name', 'like', '%' . $search . '%'))
                 ->latest()
                 ->paginate($request->per_page);
-        } else {
+        } else if (auth()->user()->position === 'Coach') {
             $statistics = PlayerPerformance::with(['user'])->when($request->search, fn ($query, $search)
+            => $query->where('team', 'like', '%' . $search . '%')
+                ->orWhereRelation('user', 'first_name', 'like', '%' . $search . '%')
+                ->orWhereRelation('user', 'last_name', 'like', '%' . $search . '%'))
+                ->latest()
+                ->paginate($request->per_page);
+        } else {
+            $statistics = PlayerPerformance::withWhereHas(
+                'user',
+                fn ($query) =>
+                $query->where('id', auth()->id())
+            )->when($request->search, fn ($query, $search)
             => $query->where('team', 'like', '%' . $search . '%')
                 ->orWhereRelation('user', 'first_name', 'like', '%' . $search . '%')
                 ->orWhereRelation('user', 'last_name', 'like', '%' . $search . '%'))

@@ -1,3 +1,18 @@
+"Super Admin (Hd Caoch) and  Admin (Asst.Coach) "
+
+- Remove Game won or lost at player statistic input and view [x]
+
+- 1 made freethrow is equals to 1 point when viewing data [x]
+
+- Asst coach can view assigned players finish drills
+
+
+" User (player) "
+
+- can view player statistic and evaluation
+
+- - - - - - - - - - - - - - - - - - -
+
 Categorize each school year or season of each player 
 
 Player full score or performance of the game display [x]

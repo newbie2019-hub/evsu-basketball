@@ -146,10 +146,6 @@
               Total Field Attempts:
               {{ selectedStatistics.field_goals_attempted }}
             </p>
-            <p class="q-mb-none">
-              Three-Point Attempts:
-              {{ selectedStatistics.three_pointers_attempted }}
-            </p>
           </div>
           <div>
             <p class="q-mb-none">
@@ -164,6 +160,10 @@
             </p>
             <p class="q-mb-none">
               Total Assists {{ selectedStatistics.total_assist }}
+            </p>
+            <p class="q-mb-none">
+              Three-Point Attempts:
+              {{ selectedStatistics.three_pointers_attempted }}
             </p>
           </div>
         </div>
@@ -354,32 +354,6 @@
               />
             </div>
           </div>
-          <div class="row q-gutter-sm">
-            <div class="col">
-              <q-input
-                outlined
-                type="number"
-                :rules="[required]"
-                hide-bottom-space
-                class="q-mt-sm"
-                dense
-                v-model="selectedStatistics.games_won"
-                label="Games Won"
-              />
-            </div>
-            <div class="col">
-              <q-input
-                outlined
-                type="number"
-                :rules="[required]"
-                hide-bottom-space
-                class="q-mt-sm"
-                dense
-                v-model="selectedStatistics.games_lost"
-                label="Games Lost"
-              />
-            </div>
-          </div>
         </q-form>
       </q-card-section>
 
@@ -564,32 +538,6 @@
               />
             </div>
           </div>
-          <div class="row q-gutter-sm">
-            <div class="col">
-              <q-input
-                outlined
-                type="number"
-                :rules="[required]"
-                hide-bottom-space
-                class="q-mt-sm"
-                dense
-                v-model="playerStatistics.games_won"
-                label="Games Won"
-              />
-            </div>
-            <div class="col">
-              <q-input
-                outlined
-                type="number"
-                :rules="[required]"
-                hide-bottom-space
-                class="q-mt-sm"
-                dense
-                v-model="playerStatistics.games_lost"
-                label="Games Lost"
-              />
-            </div>
-          </div>
         </q-form>
       </q-card-section>
 
@@ -703,20 +651,6 @@ const columns = [
     sortable: false,
   },
   {
-    name: "games_won",
-    label: "Games Won",
-    align: "left",
-    field: (row) => row.games_won,
-    sortable: false,
-  },
-  {
-    name: "games_lost",
-    label: "Games Lost",
-    align: "left",
-    field: (row) => row.games_lost,
-    sortable: false,
-  },
-  {
     name: "created_on",
     label: "Created On",
     align: "left",
@@ -738,8 +672,6 @@ const playerStatistics = ref({
   field_goals_made: "",
   three_pointers_attempted: "",
   three_pointers_made: "",
-  games_won: "",
-  games_lost: "",
 });
 
 const selectedStatistics = ref({ data: {} });
@@ -831,16 +763,8 @@ const chartOptions = ref({
   },
 });
 
-const gameType = [
-  "Official Game",
-  "Practice Game",
-  "Practice Drills",
-  "Individual Training",
-  "Conditioning",
-];
-
 let { pagination } = useServerPaginate();
-const { required, minLength } = useFieldRules();
+const { required } = useFieldRules();
 const statisticsStore = useStatisticsStore();
 
 const isBtnLoading = ref(false);
@@ -892,7 +816,7 @@ const setSelectedStatistics = (data) => {
   selectedStatistics.value.data.free_throws =
     parseInt(selectedStatistics.value.free_throws_made) * 2;
   selectedStatistics.value.data.field_goals =
-    parseInt(selectedStatistics.value.field_goals_made) * 2;
+    parseInt(selectedStatistics.value.field_goals_made) * 1;
   selectedStatistics.value.data.three_points =
     parseInt(selectedStatistics.value.three_pointers_made) * 3;
   selectedStatistics.value.data.total_score =
@@ -901,7 +825,7 @@ const setSelectedStatistics = (data) => {
     selectedStatistics.value.free_throws;
 
   selectedStatistics.value.chart = {
-    categories: ["FT ", "FG ", "TP ", "FS", "Shooting", "Win"],
+    categories: ["FT ", "FG ", "TP ", "FS", "Shooting"],
     data: [
       (
         (parseInt(selectedStatistics.value.free_throws_made) /
@@ -931,12 +855,6 @@ const setSelectedStatistics = (data) => {
           parseInt(selectedStatistics.value.free_throws_attempted) +
         (parseInt(selectedStatistics.value.field_goals_attempted) +
           parseInt(selectedStatistics.value.three_pointers_attempted))
-      ).toFixed(2),
-      (
-        (parseInt(selectedStatistics.value.games_won) /
-          (parseInt(selectedStatistics.value.games_won) +
-            parseInt(selectedStatistics.value.games_lost))) *
-        100
       ).toFixed(2),
     ],
   };
