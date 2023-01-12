@@ -22,19 +22,38 @@ class PerformanceEvaluationController extends Controller
         if (auth()->user()->position === 'Assistant-Coach') {
             $performanceEvaluation = PerformanceEvaluation::withWhereHas('user', function ($query) use ($athletes) {
                 $query->whereIn('id', $athletes);
-            })->when($request->search, fn ($query, $search)
+            })->when(
+                $request->schoolYear,
+                fn ($query, $schoolYear)
+                => $query->whereYear('created_at', '>=', substr(ltrim($schoolYear, 'S.Y '), 0, 4))
+                    ->orWhereYear('created_at', '<=', substr(ltrim($schoolYear, 'S.Y '), -4))
+            )->when($request->search, fn ($query, $search)
             => $query->whereRelation('user', 'first_name', 'like', '%' . $search . '%')
                 ->orWhereRelation('user', 'last_name', 'like', '%' . $search . '%'))
                 ->with(['category'])
                 ->paginate($request->per_page);
         } else if (auth()->user()->position === 'Coach') {
-            $performanceEvaluation = PerformanceEvaluation::with(['user', 'category'])->when($request->search, fn ($query, $search)
-            => $query->whereRelation('user', 'first_name', 'like', '%' . $search . '%')
-                ->orWhereRelation('user', 'last_name', 'like', '%' . $search . '%'))
+            $performanceEvaluation = PerformanceEvaluation::with(['user', 'category'])
+                ->when(
+                    $request->schoolYear,
+                    fn ($query, $schoolYear)
+                    => $query->whereYear('created_at', substr(ltrim($schoolYear, 'S.Y '), 0, 4))
+                        ->orWhereYear('created_at', substr(ltrim($schoolYear, 'S.Y '), -4))
+                )
+                ->when($request->search, fn ($query, $search)
+                => $query->whereRelation('user', 'first_name', 'like', '%' . $search . '%')
+                    ->orWhereRelation('user', 'last_name', 'like', '%' . $search . '%'))
                 ->paginate($request->per_page);
         } else {
-            $performanceEvaluation = PerformanceEvaluation::withWhereHas('user', fn($query)
+            $performanceEvaluation = PerformanceEvaluation::withWhereHas(
+                'user',
+                fn ($query)
                 => $query->where('id', auth()->id())
+            )->when(
+                $request->schoolYear,
+                fn ($query, $schoolYear)
+                => $query->whereYear('created_at', substr(ltrim($schoolYear, 'S.Y '), 0, 4))
+                    ->orWhereYear('created_at', substr(ltrim($schoolYear, 'S.Y '), -4))
             )->with(['category'])->when($request->search, fn ($query, $search)
             => $query->whereRelation('user', 'first_name', 'like', '%' . $search . '%')
                 ->orWhereRelation('user', 'last_name', 'like', '%' . $search . '%'))

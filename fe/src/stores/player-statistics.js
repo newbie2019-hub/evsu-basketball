@@ -12,9 +12,10 @@ export const useStatisticsStore = defineStore("statisticsStore", () => {
     const sortBy = prop ? page.pagination.sortBy : "";
     const descending = prop ? page.pagination.descending : "";
     const perPage = prop ? page.pagination.rowsPerPage : 10;
+    const schoolYear = prop ? page.pagination.school_year ? page.pagination.school_year : '' : '';
 
     return api.get(
-      `statistics?page=${p}&search=${search}&per_page=${perPage}&sortBy=${sortBy}&descending=${descending}`
+      `statistics?page=${p}&search=${search}&per_page=${perPage}&sortBy=${sortBy}&descending=${descending}&schoolYear=${schoolYear}`
     );
   }
 

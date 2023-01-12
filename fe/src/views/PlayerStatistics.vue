@@ -2,6 +2,7 @@
   <div class="q-my-md">
     <q-table
       flat
+      ref="statisticsTable"
       class="my-sticky-column-table"
       :rows="statisticsStore.statistics.data"
       :columns="columns"
@@ -33,34 +34,29 @@
         </div>
       </template>
       <template #top-right>
-        <div class="flex items-center q-gutter-sm">
-          <q-input
-            dense
-            debounce="300"
-            v-model="pagination.search"
-            placeholder="Search"
-          >
-            <template #append>
-              <q-icon name="search" />
-            </template>
-          </q-input>
-          <div>
-            <q-btn
-              v-if="!pagination.filter"
-              icon="mdi-filter-menu-outline"
-              round
-              flat
-              size="10px"
-              @click="pagination.filter = true"
+        <div class="flex items-center">
+          <div style="width: 240px">
+            <q-select
+              clearable
+              dense
+              v-model="pagination.school_year"
+              :options="schoolYear"
+              label="School Year"
+              class="q-mr-md"
             />
-            <q-btn
-              v-else
-              icon="mdi-filter-minus-outline"
-              round
-              flat
-              size="10px"
-              @click="pagination.filter = false"
-            />
+          </div>
+          <div style="width: 240px">
+            <q-input
+              dense
+              debounce="300"
+              v-model="pagination.search"
+              hide-bottom-space
+              placeholder="Search"
+            >
+              <template #append>
+                <q-icon name="search" />
+              </template>
+            </q-input>
           </div>
         </div>
       </template>
@@ -564,7 +560,7 @@
 </template>
 <script setup>
 import { useStatisticsStore } from "src/stores/player-statistics";
-import { onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref, watch } from "vue";
 import { useToast } from "vue-toastification";
 import { useServerPaginate } from "../composable/useServerPaginate";
 import { useFieldRules } from "../composable/useFieldRules";
@@ -763,10 +759,11 @@ const chartOptions = ref({
   },
 });
 
-let { pagination } = useServerPaginate();
+let { pagination, schoolYear } = useServerPaginate();
 const { required } = useFieldRules();
 const statisticsStore = useStatisticsStore();
 
+const statisticsTable = ref('');
 const isBtnLoading = ref(false);
 const toast = useToast();
 const form = ref("");
@@ -801,6 +798,13 @@ const filterFn = (val, update) => {
     athletes.value = data;
   });
 };
+
+watch(
+  () => pagination.value.school_year,
+  async() => {
+    statisticsTable.value.requestServerInteraction()
+  }
+);
 
 const setSelectedStatistics = (data) => {
   selectedStatistics.value = { data: {} };

@@ -2,6 +2,7 @@
   <div class="q-my-md">
     <q-table
       flat
+      ref="evaluationTable"
       class="my-sticky-column-table"
       :rows="perfEvalStore.performances.data"
       :columns="columns"
@@ -32,6 +33,16 @@
       </template>
       <template #top-right>
         <div class="flex items-center q-gutter-sm">
+          <div style="width: 240px">
+            <q-select
+              clearable
+              dense
+              v-model="pagination.school_year"
+              :options="schoolYear"
+              label="School Year"
+              class="q-mr-md"
+            />
+          </div>
           <q-input
             dense
             debounce="300"
@@ -131,7 +142,7 @@
 <script setup>
 // import { useEvaluationStore } from "../stores/evaluation.js";
 import { usePerfEvalStore } from "../stores/performance-evaluation.js";
-import { onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref, watch } from "vue";
 import { useToast } from "vue-toastification";
 import { useServerPaginate } from "../composable/useServerPaginate";
 import { useFieldRules } from "../composable/useFieldRules";
@@ -193,8 +204,9 @@ const confirmDelete = ref(false);
 const addModal = ref(false);
 const updateModal = ref(false);
 const loading = ref(false);
+const evaluationTable = ref("");
 
-let { pagination } = useServerPaginate();
+let { pagination, schoolYear } = useServerPaginate();
 const { required, minLength } = useFieldRules();
 const perfEvalStore = usePerfEvalStore();
 
@@ -206,6 +218,13 @@ const toggleDeleteModal = () => (confirmDelete.value = !confirmDelete.value);
 onBeforeMount(async () => {
   await getData();
 });
+
+watch(
+  () => pagination.value.school_year,
+  async () => {
+    evaluationTable.value.requestServerInteraction();
+  }
+);
 
 const getData = async (props) => {
   loading.value = true;

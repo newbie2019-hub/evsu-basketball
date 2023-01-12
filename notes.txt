@@ -1,19 +1,17 @@
-"Super Admin (Hd Caoch) and  Admin (Asst.Coach) "
+Categorize each school year or season of each player 
+ - Add dropdown with school years then add to query
+   - only on statistics and evaluation
 
-- Remove Game won or lost at player statistic input and view [x]
+Asst coach can view assigned players finish drills
 
-- 1 made freethrow is equals to 1 point when viewing data [x]
-
-- Asst coach can view assigned players finish drills
-
-
-" User (player) "
-
-- can view player statistic and evaluation
 
 - - - - - - - - - - - - - - - - - - -
 
-Categorize each school year or season of each player 
+can view player statistic and evaluation [x]
+
+Remove Game won or lost at player statistic input and view [x]
+
+1 made freethrow is equals to 1 point when viewing data [x]
 
 Player full score or performance of the game display [x]
 

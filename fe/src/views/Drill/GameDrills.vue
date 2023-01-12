@@ -425,6 +425,7 @@
 
 <script setup>
 import { useDrillsStore } from "../../stores/drills.js";
+import { useFinishedDrillsStore } from "../../stores/finished-drills.js";
 import { onBeforeMount, onMounted, ref } from "vue";
 import { useToast } from "vue-toastification";
 import { useServerPaginate } from "../../composable/useServerPaginate";
@@ -499,6 +500,7 @@ let { pagination } = useServerPaginate();
 const { required, minLength, minMaxVal, secMaxVal, hoursMaxVal, defaultVal } =
   useFieldRules();
 const drillStore = useDrillsStore();
+const finishedDrillStore = useFinishedDrillsStore();
 const { getAll } = useCategoryStore();
 
 const isBtnLoading = ref(false);
@@ -533,12 +535,34 @@ const submitSaveForm = async () => {
 
 onBeforeMount(async () => {
   await getData();
+  await getFinishedDrills();
   await getCategories();
 });
 
 const getCategories = async () => {
   const { status, data } = await getAll();
   categories.value = data;
+};
+
+const getFinishedDrills = async (props) => {
+  loading.value = true;
+
+  const initialPage = props ?? 1;
+  pagination.value.rowsPerPage = props?.pagination?.rowsPerPage ?? 10;
+
+  const { status, data } = await finishedDrillStore.get(initialPage);
+
+  if (status == 200) {
+    finishedDrillStore.drills = data;
+    pagination.value.rowsNumber = data.total;
+    pagination.value.page = data.current_page;
+    pagination.value.from = data.from;
+    pagination.value.to = data.to;
+    pagination.value.total = data.total;
+    pagination.value.last_page = data.last_page;
+  }
+
+  loading.value = false;
 };
 
 const getData = async (props) => {
@@ -615,17 +639,18 @@ const deleteDrill = async () => {
   toggleDeleteModal();
 };
 
-const markAsFinish = async() => {
-  isBtnLoading.value = true
+const markAsFinish = async () => {
+  isBtnLoading.value = true;
   const { data, status } = await finishDrill(selectedDrill.value);
 
   if (status === 200) {
     toast.success(data.msg);
+    await getFinishedDrills();
     await getData();
   }
 
   isBtnLoading.value = false;
-}
+};
 </script>
 
 <style>

@@ -2,7 +2,7 @@
   <div>
     <q-layout class="q-my-none">
       <div class="row">
-        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
+        <!-- <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
           <q-list class="q-mt-md" :class="{'sticky-menu' : screen.gt.xs }" >
             <q-item clickable v-ripple :active="personalSettings" @click.prevent="personalSettings = true">
               <q-item-section
@@ -19,11 +19,11 @@
               </q-item-section>
             </q-item>
           </q-list>
-        </div>
-        <div class="col-xs-12 col-sm-8 col-md-9 col-lg-9">
+        </div> -->
+        <div class="col-xs-12 col-sm-8 col-md-12 col-lg-12">
           <div class="q-pl-sm">
-            <AccountSettings v-if="personalSettings"/>
-            <AccountRegistration v-else />
+            <AccountSettings />
+            <!-- <AccountRegistration v-else /> -->
           </div>
         </div>
       </div>

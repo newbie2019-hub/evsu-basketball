@@ -15,8 +15,9 @@ export const usePerfEvalStore = defineStore("perfEvalStore", () => {
     const p =  prop ? page.pagination.page : page
     const search = prop ? page.pagination.search : ''
     const perPage = prop ? page.pagination.rowsPerPage : 10
+    const schoolYear = prop ? page.pagination.school_year ? page.pagination.school_year : '' : '';
 
-    return api.get(`performances?page=${p}&search=${search}&per_page=${perPage}`);
+    return api.get(`performances?page=${p}&search=${search}&per_page=${perPage}&schoolYear=${schoolYear}`);
   }
 
   function deletePerformance(data) {
