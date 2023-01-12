@@ -28,7 +28,9 @@ class AthletesController extends Controller
 
         $athletes = User::with(['team.team', 'drills'])->where('user_type', '<>', 'admin')
             ->where('position', '<>', 'Assistant-Coach')
-            ->when($request->assignedPlayers, fn($query)
+            ->when(
+                $request->assignedPlayers,
+                fn ($query)
                 => $query->whereIn('id', $athletes)
             )
             ->when(
@@ -54,16 +56,16 @@ class AthletesController extends Controller
 
     public function show(User $user)
     {
-        $user->load(['team.team']);
+        $user->load(['team.team', 'drills.category']);
         $pf = PlayerPerformance::where('user_id', $user->id)->get();
 
         $evaluation = PerformanceEvaluation::where('user_id', $user->id)->get();
 
         return $this->data([
-                'user' => $user,
-                'performance' => $pf,
-                'evaluation' => $evaluation
-               ]);
+            'user' => $user,
+            'performance' => $pf,
+            'evaluation' => $evaluation
+        ]);
     }
 
     public function update(AthleteRequest $request, User $user)

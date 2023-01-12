@@ -1,5 +1,5 @@
 <template>
-  <div class="q-py-md bg-athlete">
+  <div class="q-py-lg">
     <div class="row q-gutter-md items-stretch full-width full-height">
       <div class="col-12 col-sm-11 col-md-5 col-lg-4">
         <q-card class="">
@@ -58,6 +58,42 @@
       </div>
     </div>
   </div>
+  <div class="" v-if="user?.user_type !== 'admin'">
+    <p class="q-mb-none q-ml-md text-weight-medium text-h6">Finished Drills</p>
+    <p class="q-ml-md text-grey-10">
+      Listed on the table are the drills that you've finished
+    </p>
+    <q-table
+      ref="drillsTable"
+      flat
+      class="my-sticky-column-table"
+      :rows="selectedAthlete.user?.drills"
+      :columns="columns"
+      row-key="name"
+      :filter="search"
+      :loading="loading"
+    >
+      <template #top-right>
+        <div class="flex items-center q-gutter-sm">
+          <q-input dense debounce="300" v-model="search" placeholder="Search">
+            <template #append>
+              <q-icon name="search" />
+            </template>
+          </q-input>
+        </div>
+      </template>
+      <template #body-cell-drill="props">
+        <q-td :props="props" class="ellipsis" style="max-width: 200px">
+          {{ props.row.drill }}
+        </q-td>
+      </template>
+      <template #body-cell-description="props">
+        <q-td :props="props" class="ellipsis" style="max-width: 180px">
+          {{ props.row.description }}
+        </q-td>
+      </template>
+    </q-table>
+  </div>
 </template>
 <script setup>
 import { useAthleteStore } from "src/stores/athletes";
@@ -72,6 +108,7 @@ const routeIDParam = ref(null);
 const selectedAthlete = ref("");
 const age = ref(null);
 const series = ref([]);
+const search = ref("");
 const chartOptions = ref({
   chart: {
     height: 400,
@@ -109,6 +146,38 @@ const chartOptions = ref({
     ],
   },
 });
+
+const columns = [
+  {
+    name: "drill",
+    label: "Drill",
+    align: "left",
+    field: (row) => row.drill.description,
+    sortable: false,
+  },
+  {
+    name: "description",
+    label: "Description",
+    align: "left",
+    field: (row) => row.drill.description,
+    sortable: false,
+  },
+  {
+    name: "category",
+    label: "Category",
+    align: "left",
+    field: (row) => row.drill.category?.category ?? "Uncategorized",
+    sortable: false,
+  },
+  {
+    name: "finished_on",
+    label: "Finished On",
+    align: "left",
+    field: (row) => row.created_at,
+    sortable: false,
+  },
+];
+
 onMounted(async () => {
   routeIDParam.value = route.params.id ?? null;
   await getAthleteData();
