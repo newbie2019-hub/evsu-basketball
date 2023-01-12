@@ -818,9 +818,9 @@ const setSelectedStatistics = (data) => {
   };
 
   selectedStatistics.value.data.free_throws =
-    parseInt(selectedStatistics.value.free_throws_made) * 2;
+    parseInt(selectedStatistics.value.free_throws_made) * 1;
   selectedStatistics.value.data.field_goals =
-    parseInt(selectedStatistics.value.field_goals_made) * 1;
+    parseInt(selectedStatistics.value.field_goals_made) * 2;
   selectedStatistics.value.data.three_points =
     parseInt(selectedStatistics.value.three_pointers_made) * 3;
   selectedStatistics.value.data.total_score =
