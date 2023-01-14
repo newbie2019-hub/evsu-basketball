@@ -80,6 +80,7 @@
             style="margin-top: -5px; padding-left: 15px; padding-right: 15px"
           >
             <q-btn
+              v-if="user?.user_type == 'admin' || user.position == 'Assistant-Coach'"
               :to="`/player-evaluation/${props.row.id}`"
               flat
               size="10px"
@@ -90,6 +91,7 @@
               <q-tooltip>View Details</q-tooltip>
             </q-btn>
             <q-btn
+              v-if="user?.user_type == 'admin' || user.position == 'Assistant-Coach'"
               @click.prevent="
                 confirmDelete = true;
                 selectedPerformance = props.row;
@@ -146,6 +148,9 @@ import { onBeforeMount, ref, watch } from "vue";
 import { useToast } from "vue-toastification";
 import { useServerPaginate } from "../composable/useServerPaginate";
 import { useFieldRules } from "../composable/useFieldRules";
+import { useAuthStore } from "src/stores/authentication";
+
+const { user } = useAuthStore();
 
 const columns = [
   {

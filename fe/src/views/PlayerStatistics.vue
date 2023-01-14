@@ -67,6 +67,9 @@
             style="margin-top: -5px; padding-left: 15px; padding-right: 15px"
           >
             <q-btn
+              v-if="
+                user?.user_type == 'admin' || user.position == 'Assistant-Coach'
+              "
               @click.prevent="
                 setSelectedStatistics(props.row);
                 viewResults = true;
@@ -89,6 +92,9 @@
               icon="mdi-pencil-outline"
             />
             <q-btn
+              v-if="
+                user?.user_type == 'admin' || user.position == 'Assistant-Coach'
+              "
               @click.prevent="
                 confirmDelete = true;
                 selectedStatistics = props.row;
@@ -137,10 +143,6 @@
                   selectedStatistics.three_pointers_attempted
                 )
               }}
-            </p>
-            <p class="q-mb-none">
-              Total Field Attempts:
-              {{ selectedStatistics.field_goals_attempted }}
             </p>
           </div>
           <div>
@@ -763,7 +765,7 @@ let { pagination, schoolYear } = useServerPaginate();
 const { required } = useFieldRules();
 const statisticsStore = useStatisticsStore();
 
-const statisticsTable = ref('');
+const statisticsTable = ref("");
 const isBtnLoading = ref(false);
 const toast = useToast();
 const form = ref("");
@@ -801,8 +803,8 @@ const filterFn = (val, update) => {
 
 watch(
   () => pagination.value.school_year,
-  async() => {
-    statisticsTable.value.requestServerInteraction()
+  async () => {
+    statisticsTable.value.requestServerInteraction();
   }
 );
 
