@@ -81,6 +81,9 @@
               icon="mdi-eye"
             />
             <q-btn
+              v-if="
+                user?.user_type == 'admin' || user.position == 'Assistant-Coach'
+              "
               @click.prevent="
                 updateModal = true;
                 selectedStatistics = JSON.parse(JSON.stringify(props.row));

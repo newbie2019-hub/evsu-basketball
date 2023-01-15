@@ -58,7 +58,7 @@
       </div>
     </div>
   </div>
-  <div class="" v-if="user?.user_type !== 'admin'">
+  <div class="">
     <p class="q-mb-none q-ml-md text-weight-medium text-h6">Finished Drills</p>
     <p class="q-ml-md text-grey-10">
       Listed on the table are the drills that you've finished
@@ -97,6 +97,7 @@
 </template>
 <script setup>
 import { useAthleteStore } from "src/stores/athletes";
+import { useAuthStore } from "src/stores/authentication";
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import moment from "moment";
@@ -106,6 +107,9 @@ const route = useRoute();
 const athleteStore = useAthleteStore();
 const routeIDParam = ref(null);
 const selectedAthlete = ref("");
+const { user } = useAuthStore();
+
+const loading = ref(false);
 const age = ref(null);
 const series = ref([]);
 const search = ref("");
@@ -141,8 +145,6 @@ const chartOptions = ref({
       "FG Made",
       "TP Attempt",
       "TP Made",
-      "Games Won",
-      "Games Lost",
     ],
   },
 });
@@ -208,8 +210,6 @@ const setChartData = () => {
         performance.free_throws_made,
         performance.three_pointers_attempted,
         performance.three_pointers_made,
-        performance.games_lost,
-        performance.games_won,
       ],
     });
   });
