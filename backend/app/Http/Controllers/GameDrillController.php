@@ -61,6 +61,7 @@ class GameDrillController extends Controller
     {
         PlayerDrillLog::create([
             'user_id' => auth()->id(),
+            'remarks' => $request->remarks,
             'game_drill_id' => $request->id,
             'finished_on' => now()
         ]);

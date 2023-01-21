@@ -36,13 +36,20 @@ export const useAthleteStore = defineStore("athleteStore", () => {
   }
 
   function update(data) {
-    console.log('Passed Data: ', data)
     return api.put(`athletes/${data.id}`, data);
+  }
+
+  function approve(data) {
+    return api.put(`athletes/approve/${data.id}`, data);
+  }
+
+  function decline(data) {
+    return api.put(`athletes/decline/${data.id}`, data);
   }
 
   function create(data) {
     return api.post("athletes", data);
   }
 
-  return { assignDrills, athletes, get, getAthlete, deleteAthlete, update, create, athleteOptions };
+  return { assignDrills, athletes, get, getAthlete, deleteAthlete, update, create, athleteOptions, approve, decline };
 });

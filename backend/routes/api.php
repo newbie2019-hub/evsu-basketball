@@ -14,6 +14,7 @@ use App\Http\Controllers\GameScheduleController;
 use App\Http\Controllers\PerformanceEvaluationController;
 use App\Http\Controllers\PlayerStatisticsController;
 use App\Http\Controllers\TeamController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,11 +27,18 @@ use App\Http\Controllers\TeamController;
 |
 */
 
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+
+    return redirect('/home');
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
 Route::controller(AuthController::class)->group(function () {
+    Route::post('verify', 'verify');
     Route::post('login', 'login');
     Route::post('register', 'register');
 });
@@ -50,6 +58,9 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::get('getTeams', [TeamController::class, 'getTeams']);
     Route::apiResource('teams', TeamController::class);
+
+    Route::put('athletes/approve/{athlete}', [AuthController::class, 'approve']);
+    Route::put('athletes/decline/{athlete}', [AuthController::class, 'decline']);
 
     Route::put('athletes/assign/{athlete}', [AthletesController::class, 'assign']);
     Route::get('getAthletes', [AthletesController::class, 'getAthletes']);

@@ -29,9 +29,11 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('position', 150)->nullable();
             $table->string('email')->unique();
+            $table->string('password');
             $table->string('user_type', 25)->default('user');
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->timestamp('approved_at')->nullable();
+            $table->timestamp('declined_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

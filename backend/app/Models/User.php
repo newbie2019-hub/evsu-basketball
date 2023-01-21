@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\HasApiTokens;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 class User extends Authenticatable
 {
@@ -38,7 +39,10 @@ class User extends Authenticatable
         'contact',
         'email',
         'password',
-        'user_type'
+        'user_type',
+        'email_verified_at',
+        'approved_at',
+        'declined_at',
     ];
 
     protected function serializeDate(DateTimeInterface $date)
@@ -63,6 +67,8 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'declined_at' => 'datetime',
+        'approved_at' => 'datetime',
     ];
 
     public function team()

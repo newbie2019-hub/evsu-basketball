@@ -101,6 +101,30 @@
             style="margin-top: -5px; padding-left: 15px; padding-right: 15px"
           >
             <q-btn
+              v-if="user.position == 'Coach' && !props.row.approved_at"
+              @click.prevent="
+                toggleApproveModal();
+                setSelectedAthlete(JSON.parse(JSON.stringify(props.row)));
+              "
+              flat
+              size="10px"
+              round
+              color="grey-7"
+              icon="mdi-check"
+            />
+            <q-btn
+              v-if="user.position == 'Coach' && !props.row.declined_at"
+              @click.prevent="
+                toggleDeclineModal();
+                setSelectedAthlete(JSON.parse(JSON.stringify(props.row)));
+              "
+              flat
+              size="10px"
+              round
+              color="grey-7"
+              icon="mdi-close"
+            />
+            <q-btn
               v-if="allowAssignDrill(props.row.id)"
               @click.prevent="
                 assignDrills = true;
@@ -211,6 +235,70 @@
           v-close-popup
           style="font-size: 0.8rem"
           :disable="isBtnLoading"
+        />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+
+  <q-dialog v-model="approveModal" persistent>
+    <q-card style="max-width: 380px">
+      <q-card-section class="">
+        <p class="q-mb-none text-weight-medium" style="font-size: 1.1rem">
+          Confirm Approve
+        </p>
+        <p class="q-mb-none q-mt-sm">
+          Are you sure you want to approve this athlete?
+        </p>
+      </q-card-section>
+
+      <q-card-actions align="right">
+        <q-btn
+          flat
+          label="Cancel"
+          color="primary"
+          v-close-popup
+          style="font-size: 0.8rem"
+          :disable="isBtnLoading"
+        />
+        <q-btn
+          @click.prevent="approveAthlete"
+          flat
+          label="Approve"
+          color="green-5"
+          style="font-size: 0.8rem"
+          :loading="isBtnLoading"
+        />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+
+  <q-dialog v-model="declineModal" persistent>
+    <q-card style="max-width: 380px">
+      <q-card-section class="">
+        <p class="q-mb-none text-weight-medium" style="font-size: 1.1rem">
+          Confirm Decline
+        </p>
+        <p class="q-mb-none q-mt-sm">
+          Are you sure you want to decline this athlete?
+        </p>
+      </q-card-section>
+
+      <q-card-actions align="right">
+        <q-btn
+          flat
+          label="Cancel"
+          color="primary"
+          v-close-popup
+          style="font-size: 0.8rem"
+          :disable="isBtnLoading"
+        />
+        <q-btn
+          @click.prevent="declineAthlete"
+          flat
+          label="Decline"
+          color="red-5"
+          style="font-size: 0.8rem"
+          :loading="isBtnLoading"
         />
       </q-card-actions>
     </q-card>
@@ -704,6 +792,20 @@ const columns = [
     sortable: false,
   },
   {
+    name: "approved_at",
+    label: "Approved At",
+    align: "left",
+    field: (row) => row.approved_at,
+    sortable: false,
+  },
+  {
+    name: "declined_at",
+    label: "Declined At",
+    align: "left",
+    field: (row) => row.declined_at,
+    sortable: false,
+  },
+  {
     name: "created_on",
     label: "Created On",
     align: "left",
@@ -734,6 +836,8 @@ const confirmDelete = ref(false);
 const { drillsOptions } = useDrillsStore();
 const addModal = ref(false);
 const updateModal = ref(false);
+const declineModal = ref(false);
+const approveModal = ref(false);
 const assignDrills = ref(false);
 const loading = ref(false);
 const viewModal = ref(false);
@@ -762,6 +866,8 @@ const athleteTable = ref("");
 const toggleCreateModal = () => (addModal.value = !addModal.value);
 
 const toggleDeleteModal = () => (confirmDelete.value = !confirmDelete.value);
+const toggleApproveModal = () => (approveModal.value = !approveModal.value);
+const toggleDeclineModal = () => (declineModal.value = !declineModal.value);
 
 const submitForm = async () => {
   await form.value.submit();
@@ -845,6 +951,32 @@ const updateAthlete = async () => {
   isBtnLoading.value = false;
 };
 
+const approveAthlete = async () => {
+  isBtnLoading.value = true;
+  const { data, status } = await athleteStore.approve(selectedAthlete.value);
+
+  if (status === 200) {
+    toast.success(data.msg);
+    await getData();
+  }
+
+  isBtnLoading.value = false;
+  toggleApproveModal();
+};
+
+const declineAthlete = async () => {
+  isBtnLoading.value = true;
+  const { data, status } = await athleteStore.decline(selectedAthlete.value);
+
+  if (status === 200) {
+    toast.success(data.msg);
+    await getData();
+  }
+
+  isBtnLoading.value = false;
+  toggleDeclineModal();
+};
+
 const deleteAthlete = async () => {
   isBtnLoading.value = true;
   const { data, status } = await athleteStore.deleteAthlete(
@@ -862,9 +994,9 @@ const deleteAthlete = async () => {
 
 const allowAssignDrill = (id) => {
   const users = user.players?.map((player) => player.athlete_id);
-  if(users.includes(id)) return true
+  if (users.includes(id)) return true;
 
-  return false
+  return false;
 };
 
 const setSelectedAthlete = (data) => {

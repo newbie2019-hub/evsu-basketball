@@ -1,3 +1,20 @@
+1. Edit backend before logging in. Check account if approved status is not null
+
+2. Backend fn and Send email for approved and declined accounts
+
+1 .  Admin confirmation once mag create acc an usa na player diretso na dapat may email verification  
+
+2 . Ass Coach can only edit assigned player's statistic and evaluation [x]
+
+3 .  User or player can input outcome of given drill before marking it as finished
+
+4. TP na word mahimo unta nga 3P [x]
+
+5. An score unta han player ma ddisplay kay an nakadto an field goal made man la then an 
+
+
+- - - - - - - - - - - - - - - - - - -
+
 Categorize each school year or season of each player 
  - Add dropdown with school years then add to query
    - only on statistics and evaluation

@@ -26,7 +26,9 @@ class DefaultAccountSeeder extends Seeder
             'email' => 'avillanueva@gmail.com',
             'password' => '123123',
             'height' => 175,
-            'weight' => 60
+            'weight' => 60,
+            'approved_at' => now(),
+            'email_verified_at' => now()
         ]);
     }
 }

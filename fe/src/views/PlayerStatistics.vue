@@ -147,6 +147,14 @@
                 )
               }}
             </p>
+            <p class="q-mb-none">
+              Total Scores:
+              {{
+                selectedStatistics.data.three_points +
+                selectedStatistics.data.field_goals +
+                selectedStatistics.data.free_throws
+              }}
+            </p>
           </div>
           <div>
             <p class="q-mb-none">
@@ -287,7 +295,7 @@
                 class="q-mt-sm"
                 dense
                 v-model="selectedStatistics.three_pointers_attempted"
-                label="TP Attempted"
+                label="3P Attempted"
               />
             </div>
             <div class="col">
@@ -299,7 +307,7 @@
                 class="q-mt-sm"
                 dense
                 v-model="selectedStatistics.three_pointers_made"
-                label="TP Made"
+                label="3P Made"
               />
             </div>
           </div>
@@ -471,7 +479,7 @@
                 class="q-mt-sm"
                 dense
                 v-model="playerStatistics.three_pointers_attempted"
-                label="TP Attempted"
+                label="3P Attempted"
               />
             </div>
             <div class="col">
@@ -483,7 +491,7 @@
                 class="q-mt-sm"
                 dense
                 v-model="playerStatistics.three_pointers_made"
-                label="TP Made"
+                label="3P Made"
               />
             </div>
           </div>
@@ -611,14 +619,14 @@ const columns = [
   },
   {
     name: "tp_attempted",
-    label: "TP Attempted",
+    label: "3P Attempted",
     align: "left",
     field: (row) => row.three_pointers_attempted,
     sortable: false,
   },
   {
     name: "tp_made",
-    label: "TP Made",
+    label: "3P Made",
     align: "left",
     field: (row) => row.three_pointers_made,
     sortable: false,
@@ -834,7 +842,7 @@ const setSelectedStatistics = (data) => {
     selectedStatistics.value.free_throws;
 
   selectedStatistics.value.chart = {
-    categories: ["FT ", "FG ", "TP ", "FS", "Shooting"],
+    categories: ["FT ", "FG ", "3P ", "FS", "Shooting"],
     data: [
       (
         (parseInt(selectedStatistics.value.free_throws_made) /

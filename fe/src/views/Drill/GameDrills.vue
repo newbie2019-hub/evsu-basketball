@@ -171,7 +171,7 @@
           color="green"
           v-close-popup
           style="font-size: 0.8rem"
-          @click.prevent="markAsFinish"
+          @click.prevent="toggleFinishModal"
           :disable="isBtnLoading"
         />
       </q-card-actions>
@@ -203,6 +203,55 @@
           flat
           label="Delete"
           color="red-5"
+          style="font-size: 0.8rem"
+          :loading="isBtnLoading"
+        />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+
+  <q-dialog v-model="finishModal" persistent>
+    <q-card style="max-width: 400px">
+      <q-card-section class="q-pb-none">
+        <p class="q-mb-none text-weight-medium" style="font-size: 1.1rem">
+          Confirm Finish
+        </p>
+        <p class="q-mb-none">
+          Are you sure you want to mark this drill as finished?
+        </p>
+      </q-card-section>
+      <q-card-section
+        class="q-pt-none"
+        style="max-height: 400px; overflow-y: auto"
+      >
+        <q-form ref="form" @submit="markAsFinish" class="q-mt-md">
+          <q-input
+            outlined
+            type="textarea"
+            autogrow
+            hide-bottom-space
+            class="q-mt-sm"
+            dense
+            v-model="selectedDrill.remarks"
+            label="Remarks"
+          />
+        </q-form>
+      </q-card-section>
+
+      <q-card-actions align="right" class="q-mt-md">
+        <q-btn
+          flat
+          label="Cancel"
+          color="primary"
+          v-close-popup
+          style="font-size: 0.8rem"
+          :disable="isBtnLoading"
+        />
+        <q-btn
+          @click.prevent="submitForm"
+          flat
+          label="Mark As Finish"
+          color="green-5"
           style="font-size: 0.8rem"
           :loading="isBtnLoading"
         />
@@ -489,6 +538,7 @@ const gameDrill = ref({
 const selectedDrill = ref({ instructions: "", drill: "", description: "" });
 const confirmDelete = ref(false);
 const addModal = ref(false);
+const finishModal = ref(false);
 const updateModal = ref(false);
 const viewModal = ref(false);
 const loading = ref(false);
@@ -509,8 +559,9 @@ const form = ref("");
 const saveForm = ref("");
 
 const toggleCreateModal = () => (addModal.value = !addModal.value);
-
 const toggleDeleteModal = () => (confirmDelete.value = !confirmDelete.value);
+
+const toggleFinishModal = () => (finishModal.value = !finishModal.value);
 
 onBeforeMount(async () => {
   const { data } = await authUser();
@@ -649,6 +700,7 @@ const markAsFinish = async () => {
     await getData();
   }
 
+  toggleFinishModal()
   isBtnLoading.value = false;
 };
 </script>

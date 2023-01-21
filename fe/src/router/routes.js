@@ -131,6 +131,14 @@ const routes = [
     },
   },
   {
+    path: "/verify",
+    name: "Verify Email",
+    component: () => import("../pages/AccountVerification.vue"),
+    meta: {
+      requiresAuth: false,
+    },
+  },
+  {
     path: "/register",
     name: "register",
     component: () => import("../pages/UserRegister.vue"),

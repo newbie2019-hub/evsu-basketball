@@ -21,6 +21,7 @@ class UserFactory extends Factory
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
             'email_verified_at' => now(),
+            'approved_at' => now(),
             'email' => fake()->email(),
             'gender' => 'Male',
             'address' => fake()->address(),

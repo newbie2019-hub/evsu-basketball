@@ -214,6 +214,13 @@ const columns = [
     sortable: false,
   },
   {
+    name: "remarks",
+    label: "Remarks",
+    align: "left",
+    field: (row) => row.remarks,
+    sortable: false,
+  },
+  {
     name: "category",
     label: "Category",
     align: "left",
