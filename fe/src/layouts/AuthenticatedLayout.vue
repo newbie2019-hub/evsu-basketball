@@ -103,6 +103,7 @@
             {{ user.first_name }} {{ user.last_name }}
           </div>
           <div>
+            <p class="text-caption ellipsis q-mb-none">{{ user.position }}</p>
             <p class="text-caption ellipsis q-mb-none">{{ user.email }}</p>
           </div>
         </div>

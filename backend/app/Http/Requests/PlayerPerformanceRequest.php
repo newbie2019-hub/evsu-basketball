@@ -32,7 +32,8 @@ class PlayerPerformanceRequest extends FormRequest
             'three_pointers_attempted' => 'required',
             'three_pointers_made' => 'required',
             'total_assist' => 'required',
-            'total_rebound' => 'required',
+            'offensive_rebound' => 'required',
+            'defensive_rebound' => 'required',
             'total_steal' => 'required',
             'total_block' => 'required',
         ];

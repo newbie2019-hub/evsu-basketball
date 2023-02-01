@@ -23,7 +23,8 @@ return new class extends Migration
             $table->string('three_pointers_attempted');
             $table->string('three_pointers_made');
             $table->string('total_block');
-            $table->string('total_rebound');
+            $table->string('defensive_rebound');
+            $table->string('offensive_rebound');
             $table->string('total_steal');
             $table->string('total_assist');
             $table->timestamps();

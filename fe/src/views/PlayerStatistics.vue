@@ -158,8 +158,12 @@
           </div>
           <div>
             <p class="q-mb-none">
-              Total Rebounds:
-              {{ selectedStatistics.total_rebound }}
+              Offensive Rebound:
+              {{ selectedStatistics.offensive_rebound }}
+            </p>
+            <p class="q-mb-none">
+              Defensive Rebound:
+              {{ selectedStatistics.defensive_rebound }}
             </p>
             <p class="q-mb-none">
               Total Blocks: {{ selectedStatistics.total_block }}
@@ -332,8 +336,34 @@
                 hide-bottom-space
                 class="q-mt-sm"
                 dense
-                v-model="selectedStatistics.total_rebound"
-                label="Total Rebound"
+                v-model="selectedStatistics.offensive_rebound"
+                label="Offensive Rebound"
+              />
+            </div>
+          </div>
+          <div class="row q-gutter-sm">
+            <div class="col">
+              <q-input
+                outlined
+                type="number"
+                :rules="[required]"
+                hide-bottom-space
+                class="q-mt-sm"
+                dense
+                v-model="selectedStatistics.defensive_rebound"
+                label="Defensive Rebound"
+              />
+            </div>
+            <div class="col">
+              <q-input
+                outlined
+                type="number"
+                :rules="[required]"
+                hide-bottom-space
+                class="q-mt-sm"
+                dense
+                v-model="selectedStatistics.total_assist"
+                label="Total Assists"
               />
             </div>
           </div>
@@ -348,18 +378,6 @@
                 dense
                 v-model="selectedStatistics.total_steal"
                 label="Total Steals"
-              />
-            </div>
-            <div class="col">
-              <q-input
-                outlined
-                type="number"
-                :rules="[required]"
-                hide-bottom-space
-                class="q-mt-sm"
-                dense
-                v-model="selectedStatistics.total_assist"
-                label="Total Assists"
               />
             </div>
           </div>
@@ -516,8 +534,34 @@
                 hide-bottom-space
                 class="q-mt-sm"
                 dense
-                v-model="playerStatistics.total_rebound"
-                label="Total Rebound"
+                v-model="playerStatistics.offensive_rebound"
+                label="Offensive Rebound"
+              />
+            </div>
+          </div>
+          <div class="row q-gutter-sm">
+            <div class="col">
+              <q-input
+                outlined
+                type="number"
+                :rules="[required]"
+                hide-bottom-space
+                class="q-mt-sm"
+                dense
+                v-model="playerStatistics.defensive_rebound"
+                label="Defensive Rebound"
+              />
+            </div>
+            <div class="col">
+              <q-input
+                outlined
+                type="number"
+                :rules="[required]"
+                hide-bottom-space
+                class="q-mt-sm"
+                dense
+                v-model="playerStatistics.total_assist"
+                label="Total Assists"
               />
             </div>
           </div>
@@ -531,19 +575,7 @@
                 class="q-mt-sm"
                 dense
                 v-model="playerStatistics.total_steal"
-                label="Total Steals"
-              />
-            </div>
-            <div class="col">
-              <q-input
-                outlined
-                type="number"
-                :rules="[required]"
-                hide-bottom-space
-                class="q-mt-sm"
-                dense
-                v-model="playerStatistics.total_assist"
-                label="Total Assists"
+                label="Total Steal"
               />
             </div>
           </div>
@@ -653,10 +685,17 @@ const columns = [
     sortable: false,
   },
   {
-    name: "total_rebound",
-    label: "Rebounds",
+    name: "offensive_rebound",
+    label: "Offensive Rebounds",
     align: "left",
-    field: (row) => row.total_rebound,
+    field: (row) => row.offensive_rebound,
+    sortable: false,
+  },
+  {
+    name: "defensive_rebound",
+    label: "Defensive Rebounds",
+    align: "left",
+    field: (row) => row.defensive_rebound,
     sortable: false,
   },
   {
